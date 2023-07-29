@@ -20,4 +20,14 @@ public static class InfrastructureLayerServiceExtension {
         services.AddDbContext<TrackingContext>();
         return services; 
     }
+
+    public static void LoadEnvironmentVariables(this IServiceCollection services) {
+        // TODO MAKE THE PATH DYNAMIC 
+        foreach(string line in File.ReadAllLines("../Infrastructure/.env")) {
+            var parts = line.Split("=");
+            if (parts.Length != 2)
+                continue;
+            Environment.SetEnvironmentVariable(parts[0], parts[1]);
+        }
+    }
 }

@@ -11,6 +11,7 @@ builder.Services.AddControllers().AddJsonOptions(options => {
 builder.Services.ConfigureDbContext();
 builder.Services.AddCoreDependencies(); 
 builder.Services.AddInfrastructureDependencies();
+builder.Services.LoadEnvironmentVariables();
 
 var app = builder.Build();
 

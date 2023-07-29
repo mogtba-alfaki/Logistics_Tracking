@@ -22,8 +22,8 @@ public class RestrictedAreasUseCases {
             AreaPolygon = restrictedAreaDto.AreaPolygon,
             TripId = restrictedAreaDto.TripId,
             Violated = false,
-            CreatedAt = new DateTime(),
-            UpdatedAt = new DateTime(),
+            CreatedAt = DateTime.Now.ToUniversalTime(),
+            UpdatedAt = DateTime.Now.ToUniversalTime(),
         };
         return await _repository.AddRestrictedArea(area); 
     }
