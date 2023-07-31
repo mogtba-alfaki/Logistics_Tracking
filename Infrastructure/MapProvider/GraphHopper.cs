@@ -1,3 +1,6 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
 namespace Core.Geofencing; 
 
 public class GraphHopper: IMapProvider {
@@ -13,8 +16,8 @@ public class GraphHopper: IMapProvider {
             endPoint = testingPoint2; 
         } 
         
-        var apiKey = Constants.GraphHopperApiKey; 
-        var routeUrl = Constants.GraphHopperRoutesApiUrl +
+        var apiKey = MapProviderConstants.GraphHopperApiKey; 
+        var routeUrl = MapProviderConstants.GraphHopperRoutesApiUrl +
                        "vehicle=car" +
                        "&weighting=fastest" +
                        // "&point=15.666470000000,32.627213333333 +
@@ -25,14 +28,17 @@ public class GraphHopper: IMapProvider {
                        $"&points_encoded=true" +
                        $"&key={apiKey}";
         Console.WriteLine(routeUrl);
-        return await fetchGraphHooper(routeUrl); 
+        var ghResponse = await fetchGraphHooper(routeUrl);
+        return ghResponse.Paths[0].Points; 
     }
 
-    private async Task<string>  fetchGraphHooper(string url) {
+    private async Task<GraphHopperResponse>  fetchGraphHooper(string url) {
         try {
             var result = await client.GetStringAsync(url);
-            Console.WriteLine(result);
-            return result;
+            GraphHopperResponse response = 
+                JsonSerializer.Deserialize<GraphHopperResponse>(result);
+            Console.WriteLine(response.Paths[0].Points);
+            return response; 
         }
         catch (Exception e) {
             Console.WriteLine(e);
@@ -40,3 +46,7 @@ public class GraphHopper: IMapProvider {
         }
     }
 }
+
+
+
+

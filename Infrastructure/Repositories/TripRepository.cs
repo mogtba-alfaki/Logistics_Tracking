@@ -47,4 +47,20 @@ public class TripRepository {
         await _trackingContext.SaveChangesAsync();
         return true; 
     }
+
+    public async Task<Trip> UpdateTrip(Trip trip) {
+        var entry = await _trackingContext.Trips.FindAsync(trip.Id);
+        if (entry is null) {
+            throw new Exception("Not Found"); 
+        }
+
+        entry.Destination = trip.Destination;
+        entry.FullRoute = trip.FullRoute;
+        entry.ShipmentId = trip.ShipmentId;
+        entry.Status = trip.Status;
+        entry.TruckId = trip.TruckId; 
+        entry.UpdatedAt = DateTime.Now.ToUniversalTime();
+        await _trackingContext.SaveChangesAsync();
+        return entry; 
+    }
 }

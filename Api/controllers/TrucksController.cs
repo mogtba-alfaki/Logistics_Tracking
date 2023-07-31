@@ -39,8 +39,9 @@ public class TrucksController: ControllerBase {
     }
 
 
-    [HttpDelete]
-    public async Task<IActionResult> DeleteTruck([FromBody] string id) {
+    // TODO: CHECK THE DELETE METHOD IN ALL CONTROLLERS
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTruck(string id) {
         try {
             var result = await _service.DeleteTruck(id);
             return Ok(result); 

@@ -1,3 +1,4 @@
+using Core.Geofencing;
 using Infrastructure.Database;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +13,9 @@ public static class InfrastructureLayerServiceExtension {
         services.AddScoped<RestrictedAreaRepository, RestrictedAreaRepository>();
         services.AddScoped<TrackingGenericRepository, TrackingGenericRepository>(); 
         services.AddScoped<TripLocationsRepository, TripLocationsRepository>();
-        services.AddScoped<TripRepository, TripRepository>(); 
+        services.AddScoped<TripRepository, TripRepository>();
+        services.AddScoped<IMapProvider, GraphHopper>();
+        
         return services;
     }
 
