@@ -1,3 +1,4 @@
+using Core.Geofencing;
 using Infrastructure.Database;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,12 +13,24 @@ public static class InfrastructureLayerServiceExtension {
         services.AddScoped<RestrictedAreaRepository, RestrictedAreaRepository>();
         services.AddScoped<TrackingGenericRepository, TrackingGenericRepository>(); 
         services.AddScoped<TripLocationsRepository, TripLocationsRepository>();
-        services.AddScoped<TripRepository, TripRepository>(); 
+        services.AddScoped<TripRepository, TripRepository>();
+        services.AddScoped<IMapProvider, GraphHopper>();
+        
         return services;
     }
 
     public static IServiceCollection ConfigureDbContext(this IServiceCollection services) {
         services.AddDbContext<TrackingContext>();
         return services; 
+    }
+
+    public static void LoadEnvironmentVariables(this IServiceCollection services) {
+        // TODO MAKE THE PATH DYNAMIC 
+        foreach(string line in File.ReadAllLines("../Infrastructure/.env")) {
+            var parts = line.Split("=");
+            if (parts.Length != 2)
+                continue;
+            Environment.SetEnvironmentVariable(parts[0], parts[1]);
+        }
     }
 }

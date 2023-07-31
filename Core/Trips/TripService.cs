@@ -8,12 +8,13 @@ namespace Core.Trips;
 public class TripService {
     private readonly AddTripUseCase AddTripUseCase;
     private readonly ListTripsUseCase ListTripsUseCase;
-    private readonly UpdateTripLocationUseCase UpdateTripLocationUseCase; 
-    
-    public TripService(AddTripUseCase addTripUseCase, ListTripsUseCase listTripsUseCase, UpdateTripLocationUseCase updateTripLocationUseCase) {
+    private readonly UpdateTripLocationUseCase UpdateTripLocationUseCase;
+    private readonly EndTripUseCase EndTripUseCase;
+    public TripService(AddTripUseCase addTripUseCase, ListTripsUseCase listTripsUseCase, UpdateTripLocationUseCase updateTripLocationUseCase, EndTripUseCase endTripUseCase) {
         AddTripUseCase = addTripUseCase;
         ListTripsUseCase = listTripsUseCase;
         UpdateTripLocationUseCase = updateTripLocationUseCase;
+        EndTripUseCase = endTripUseCase;
     }
 
     public async Task<List<Trip>> ListTrips(CustomQueryParameters customQueryParameters) {
@@ -25,5 +26,9 @@ public class TripService {
 
     public async Task<bool> UpdateTripLocation(TripLocationDto dto) {
         return await UpdateTripLocationUseCase.Update(dto); 
+    }
+    
+    public async Task<Trip> EndTrip(string tripId) {
+        return await EndTripUseCase.End(tripId); 
     }
 }
