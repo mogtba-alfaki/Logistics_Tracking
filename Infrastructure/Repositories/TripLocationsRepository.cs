@@ -22,4 +22,12 @@ public class TripLocationsRepository {
             .Where(x => x.TripId == tripId).ToListAsync();
         return locations; 
     }
+
+    public async Task<TripLocation> GetLatestTripLocation(string tripId) {
+        var location = await _trackingContext.TripLocations
+            .Where(x => x.TripId == tripId)
+            .OrderBy(x => x.CreatedAt)
+            .LastAsync();
+        return location; 
+    }
 }
