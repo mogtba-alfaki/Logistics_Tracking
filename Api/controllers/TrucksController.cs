@@ -10,7 +10,10 @@ namespace Api.controllers;
 [Route("api/v1/trucks")]
 public class TrucksController: ControllerBase {
     private readonly TrucksService _service;
-
+    
+    public TrucksController(TrucksService service) {
+        _service = service;
+    }
     public async Task<IActionResult> AddTruck([FromBody] TruckDto dto) {
         try {
             var result = await _service.AddTruck(dto);
@@ -21,11 +24,7 @@ public class TrucksController: ControllerBase {
             return BadRequest(e); 
         }
     }
-
-    public TrucksController(TrucksService service) {
-        _service = service;
-    }
-
+    
     [HttpGet]
     public async Task<IActionResult> ListTrucks([FromQuery] CustomQueryParameters queryParameters) {
         try {
