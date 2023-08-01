@@ -24,8 +24,9 @@ public class UpdateTripLocationUseCase {
             throw new Exception("Trip Not Started Yet"); 
         } 
         
-        // TODO should check if the trip is on a restricted area
-
+        // TODO should check if the trip is on a restricted area 
+        var previousTripLocation = await _tripLocationsRepository.GetLatestTripLocation(trip.Id);
+        
         var tripLocation = new TripLocation {
             Id = IdGenerator.Generate(),
             Altitude = dto.Altitude,
@@ -33,13 +34,28 @@ public class UpdateTripLocationUseCase {
             Latitude = dto.Latitude,
             Longitude = dto.Longitude,
             Speed = dto.Speed,
-            TimeSpent = 0, //   TODO: CALCULATE LATER BASED ON THE PREVIOUS LOCATION,
+            TimeSpent = 0,
             TripId = dto.TripId,
             CreatedAt = DateTime.Now.ToUniversalTime(),
             UpdatedAt = DateTime.Now.ToUniversalTime(),
         }; 
         
+        tripLocation.TimeSpent = CalculateTimeSpentAtLocation(tripLocation,
+            previousTripLocation); 
+        
         await _tripLocationsRepository.AddTripLocation(tripLocation);
         return true;
+    }
+
+
+    private int CalculateTimeSpentAtLocation(TripLocation current, TripLocation previous) {
+        var timeSpent = 
+            current.CreatedAt
+            .Subtract(previous.CreatedAt);
+        var days = timeSpent.Days;
+        var hours = timeSpent.Hours;
+        var seconds = timeSpent.Seconds;
+        var timeSpentInSeconds = (days * 24 * 60 * 60) + (hours * 60 * 60) + seconds;
+        return timeSpentInSeconds;
     }
 }
