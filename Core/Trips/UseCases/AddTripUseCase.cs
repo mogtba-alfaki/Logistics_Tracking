@@ -1,4 +1,5 @@
 using Core.Enums;
+using Core.Exceptions;
 using Core.Trips.Dto;
 using Domain.Entities;
 using Infrastructure.Repositories;
@@ -18,7 +19,7 @@ public class AddTripUseCase {
     public async Task<Trip> AddTrip(AddTripDto dto) {
         var truck = await _trackingGenericRepository.GetTruckById(dto.TruckId);
         if (truck == null ||  truck.Status == (int) TruckStatuses.ON_TRIP) {
-            throw new Exception("Truck is on trip"); 
+            throw new UnCorrectTruckStatusException("Truck is Already on Trip"); 
         }
 
         var tripShipment = new Shipment {
@@ -47,7 +48,6 @@ public class AddTripUseCase {
         
         var result = await _tripRepository.AddTrip(trip);
         await _trackingGenericRepository.ChangeTruckStatus(truck.Id,(int) TruckStatuses.ON_TRIP);
-
         return result;
     }
 }

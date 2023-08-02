@@ -17,9 +17,8 @@ public class TruckUseCases {
     }
 
     public async Task<Truck> AddTruck(TruckDto dto) {
+        // TODO refactor dto mappers 
         // var truck = TruckMapper.MapDtoToEntity(truckDto);
-        Console.WriteLine("*************************** **");
-        Console.WriteLine(dto);
         var truck = new Truck {
             Id = IdGenerator.Generate(),
             Color = dto.Color,
