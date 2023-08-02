@@ -55,13 +55,7 @@ public class TripsController: ControllerBase {
     [HttpPost]
     [Route("end")]
     public async Task<IActionResult> EndTrip(string id) {
-        try {
             var result = await _tripService.EndTrip(id);
-            return Ok(result); 
-        }
-        catch (Exception e) {
-            Console.WriteLine(e);
-            return BadRequest(e); 
-        }
+            return Ok(result);
     }
 }

@@ -1,4 +1,5 @@
 using Core.Enums;
+using Core.Exceptions;
 using Core.Geofencing;
 using Domain.Entities;
 using Infrastructure.Repositories;
@@ -20,7 +21,7 @@ public class EndTripUseCase {
         var trip = await _repository.GetTripById(tripId);
         
         if (trip.Status != (int) TripStatuses.STARTED) {
-            throw new Exception("Trip Cannot Be Ended"); 
+            throw new UnCorrectTripStatusException("Trip cannot be ended at this current status"); 
         }
 
         var tripLocations = await _locationsRepository
