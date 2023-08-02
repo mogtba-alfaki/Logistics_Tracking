@@ -1,4 +1,5 @@
 using Core.Enums;
+using Core.Exceptions;
 using Core.Trips.Dto;
 using Domain.Entities;
 using Infrastructure.Repositories;
@@ -21,7 +22,7 @@ public class UpdateTripLocationUseCase {
         
         
         if (trip.Status != (int) TripStatuses.STARTED) {
-            throw new Exception("Trip Not Started Yet"); 
+            throw new UnCorrectTripStatusException("Trip Not Started Yet"); 
         } 
         
         // TODO should check if the trip is on a restricted area 

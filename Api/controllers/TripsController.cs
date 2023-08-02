@@ -16,41 +16,23 @@ public class TripsController: ControllerBase {
 
     [HttpGet]
     public async Task<IActionResult> ListTrips([FromQuery] CustomQueryParameters queryParameters) {
-        try {
-            var result = await  _tripService.ListTrips(queryParameters);
+        var result = await  _tripService.ListTrips(queryParameters);
             return Ok(result);
-        }
-        catch (Exception e) {
-            Console.WriteLine(e);
-            return BadRequest(e); 
-        }
     }
 
 
     [HttpPost]
     public async Task<IActionResult> AddTrip(AddTripDto trip) {
-        try {
             var result = await _tripService.AddTrip(trip);
-            return Ok(result); 
+            return Ok(result);
         }
-        catch (Exception e) {
-            Console.WriteLine(e);
-            return BadRequest(e); 
-        }
-    }
 
     [HttpPost]
     [Route("location")]
     public async Task<IActionResult> UpdateTripLocation(TripLocationDto dto) {
-        try {
             var result = await _tripService.UpdateTripLocation(dto);
-            return Ok(result); 
+            return Ok(result);
         }
-        catch (Exception e) {
-            Console.WriteLine(e);
-            return BadRequest(e); 
-        }
-    }
 
     [HttpPost]
     [Route("end")]
