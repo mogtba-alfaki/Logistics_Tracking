@@ -9,14 +9,17 @@ builder.Services.AddControllers().AddJsonOptions(options => {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 });
 
+builder.Services.LoadEnvironmentVariables();
 builder.Services.ConfigureDbContext();
 builder.Services.AddCoreDependencies(); 
 builder.Services.AddInfrastructureDependencies();
-builder.Services.LoadEnvironmentVariables();
+builder.Services.ConfigureJwtAuthentication();
 
 var app = builder.Build();
 
 app.HandelGlobalExceptions();
-app.MapControllers(); 
+app.MapControllers();
+app.UseAuthentication();
+app.UseAuthorization();  
 
 app.Run();

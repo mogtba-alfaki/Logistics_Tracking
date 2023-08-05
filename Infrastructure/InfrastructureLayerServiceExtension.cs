@@ -1,21 +1,24 @@
+using System.Text;
 using Core.Geofencing;
 using Infrastructure.Database;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure; 
 
 public static class InfrastructureLayerServiceExtension {
     
     public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services) {
-        services.AddScoped<TruckRepository, TruckRepository>();
         services.AddScoped<RestrictedAreaRepository, RestrictedAreaRepository>();
         services.AddScoped<TrackingGenericRepository, TrackingGenericRepository>(); 
         services.AddScoped<TripLocationsRepository, TripLocationsRepository>();
         services.AddScoped<TripRepository, TripRepository>();
         services.AddScoped<IMapProvider, GraphHopper>();
-        
+        services.AddScoped<UserRepository, UserRepository>();
+
         return services;
     }
 
@@ -32,5 +35,25 @@ public static class InfrastructureLayerServiceExtension {
                 continue;
             Environment.SetEnvironmentVariable(parts[0], parts[1]);
         }
+    }
+    
+    public static IServiceCollection ConfigureJwtAuthentication(this IServiceCollection services) {
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options => {
+                var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
+                var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
+                var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"); 
+                
+                options.TokenValidationParameters = new TokenValidationParameters {
+                    ValidateIssuer = true,
+                    ValidateAudience = true, 
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = false,
+                    ValidIssuer = jwtIssuer,
+                    ValidAudience = jwtAudience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+                }; 
+            }); 
+        return services; 
     }
 }

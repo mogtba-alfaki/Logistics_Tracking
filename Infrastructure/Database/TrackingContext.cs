@@ -43,6 +43,9 @@ public class TrackingContext: DbContext{
         
         modelBuilder.Entity<TripLocation>()
             .ToTable("trip_locations").HasKey(location => location.Id);
+
+        modelBuilder.Entity<User>()
+            .ToTable("users").HasKey(user => user.Id); 
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
@@ -55,4 +58,6 @@ public class TrackingContext: DbContext{
     public DbSet<Shipment> Shipments { get; set; }
     public DbSet<RestrictedArea> RestrictedAreas { get; set; }
     public DbSet<TripLocation> TripLocations { get; set; }     
+    
+    public DbSet<User> Users { get; set; }
 }
