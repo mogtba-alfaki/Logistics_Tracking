@@ -45,10 +45,17 @@ public class TrackingContext: DbContext{
             .ToTable("trip_locations").HasKey(location => location.Id);
 
         modelBuilder.Entity<User>()
-            .ToTable("users").HasKey(user => user.Id); 
+            .ToTable("users").HasKey(user => user.Id);
+        modelBuilder.Entity<User>(); 
+
+        // TODO MAKE USERNAME UNIQUE 
+        // modelBuilder.Entity<User>()
+            // .Property<string>(x => x.Username).
+
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+        // TODO LOAD FROM ENVIROMENT VARIABLES
         var connectionString = "User Id=postgres; Password=postgres; Host=172.17.0.3; Port=5432;Database=tracking; Pooling=true;";
         optionsBuilder.UseNpgsql(connectionString);
     }

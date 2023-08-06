@@ -18,4 +18,8 @@ public class UsersService {
     public async Task<User> Signup(SignInDto dto) {
         return await _useCases.Signup(dto); 
     }
+    
+    public async Task<string> Login(UserLoginDto dto) {
+        return await _useCases.Login(dto); 
+    }
 }

@@ -26,7 +26,7 @@ public class UsersUseCases {
     }
 
     public async Task<User> Signup(SignInDto dto) {
-        var hashedPassword = GenerateHash(dto.Password);
+        var hashedPassword = HashHelper.ComputeHash(dto.Password); 
         var u = new User {
             Id = IdGenerator.Generate(),
             Username = dto.Username,
@@ -34,16 +34,18 @@ public class UsersUseCases {
             CreatedAt = DateTime.Now.ToUniversalTime(),
             UpdatedAt = DateTime.Now.ToUniversalTime(),
             RoleId = dto.RoleId is 0 ? dto.RoleId: (int) UserRoles.USER,
-            token = null,
+            Token = null,
         };  
         
         return await _userRepository.AddUser(u); 
     }
 
-    public async Task<string> Login(string username, string password) {
+    public async Task<string> Login(UserLoginDto dto) {
+        var username = dto.Username;
+        var password = dto.Password; 
         var userExist = await _userRepository.GetByUsername(username);
-        // TODO SHOULD HASH THE PASSWORD
-        if (userExist.Password != password) {
+        var hashedPassword = HashHelper.ComputeHash(password);
+        if (userExist.Password.Trim() != hashedPassword.Trim()) {
             throw new InvalidLoginCredentials("username or password is incorrect"); 
         }
 
@@ -54,7 +56,7 @@ public class UsersUseCases {
     private string GenerateJwtToken(User user) {
         var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
         var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-        var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");  
+        var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256); 
         var claims = new Claim[] {
@@ -70,11 +72,5 @@ public class UsersUseCases {
             signingCredentials: credentials
         );
         return new JwtSecurityTokenHandler().WriteToken(token); 
-    }
-
-    private string GenerateHash(string text) {
-        HashAlgorithm algorithm = SHA512.Create();
-        byte[] bytes = algorithm.ComputeHash(Encoding.UTF8.GetBytes(text));
-        return BitConverter.ToString(bytes); 
     }
 }

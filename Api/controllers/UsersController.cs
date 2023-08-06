@@ -26,4 +26,11 @@ public class UsersController: ControllerBase {
         var result = await _service.Signup(dto);
         return Ok(result); 
     }
+
+    [HttpPost]
+    [Route("login")]
+    public async Task<IActionResult> Login([FromBody] UserLoginDto dto) {
+        var result = await _service.Login(dto);
+        return Ok(result); 
+    }
 }
