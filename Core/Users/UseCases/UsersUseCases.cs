@@ -58,12 +58,11 @@ public class UsersUseCases {
         var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
         var audience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256); 
+        var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
         var claims = new Claim[] {
             new Claim(ClaimTypes.NameIdentifier, user.Username),
             new Claim(ClaimTypes.Role, user.RoleId.ToString()), 
         };
-
         var token = new JwtSecurityToken(
             issuer,
             audience,

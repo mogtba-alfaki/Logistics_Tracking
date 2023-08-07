@@ -42,18 +42,18 @@ public static class InfrastructureLayerServiceExtension {
             .AddJwtBearer(options => {
                 var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
                 var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
-                var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE"); 
+                var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE");
                 
                 options.TokenValidationParameters = new TokenValidationParameters {
                     ValidateIssuer = true,
                     ValidateAudience = true, 
                     ValidateLifetime = true,
-                    ValidateIssuerSigningKey = false,
+                    ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtIssuer,
                     ValidAudience = jwtAudience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
-                }; 
+                };
             }); 
-        return services; 
+        return services;
     }
 }

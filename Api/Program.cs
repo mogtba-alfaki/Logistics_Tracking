@@ -17,9 +17,11 @@ builder.Services.ConfigureJwtAuthentication();
 
 var app = builder.Build();
 
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.HandelGlobalExceptions();
 app.MapControllers();
-app.UseAuthentication();
-app.UseAuthorization();  
 
 app.Run();

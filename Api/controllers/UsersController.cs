@@ -1,7 +1,7 @@
 using Core.Users.UseCases;
 using Core.Users.UseCases.Dto;
-using Domain.Entities;
 using Infrastructure.Util;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.controllers; 
@@ -16,6 +16,8 @@ public class UsersController: ControllerBase {
     }
 
     [HttpGet]
+    // TODO add authorization and re test all routes 
+    // [Authorize]
     public async Task<IActionResult> ListUsers([FromQuery] CustomQueryParameters queryParameters) {
         var result = await _service.ListUsers(queryParameters);
         return Ok(result); 
