@@ -2,9 +2,9 @@ using System.Text;
 using Core.Geofencing;
 using Infrastructure.Database;
 using Infrastructure.Repositories;
+using Infrastructure.Util;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure; 
@@ -19,6 +19,7 @@ public static class InfrastructureLayerServiceExtension {
         services.AddScoped<IMapProvider, GraphHopper>();
         services.AddScoped<UserRepository, UserRepository>();
 
+        services.AddScoped<MultiPartFileHandler, MultiPartFileHandler>();
         return services;
     }
 

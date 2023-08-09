@@ -14,7 +14,7 @@ public class TrucksController: ControllerBase {
     public TrucksController(TrucksService service) {
         _service = service;
     }
-    public async Task<IActionResult> AddTruck([FromBody] TruckDto dto) {
+    public async Task<IActionResult> AddTruck([FromForm] TruckDto dto) {
             var result = await _service.AddTruck(dto);
             return Ok(result);
         }
