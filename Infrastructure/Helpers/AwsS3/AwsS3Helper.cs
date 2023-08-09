@@ -23,10 +23,10 @@ public static class AwsS3Helper {
             // TODO SHOULD RETURN THE S3 OBJECT ID
             return response.VersionId;
         }
-        throw new Exception("Exception While Uploading to s3"); 
+        throw new AwsS3Exception("Exception While Uploading to s3"); 
     }
 
-    public static async Task<S3Response> GetImageAsync(string bucketId) {
+    public static async Task<GetObjectResponse> GetImageAsync(string bucketId) {
         throw new NotImplementedException(); 
     }
 
