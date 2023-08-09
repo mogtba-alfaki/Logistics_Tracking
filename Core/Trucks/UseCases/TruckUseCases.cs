@@ -33,6 +33,7 @@ public class TruckUseCases {
             Color = dto.Color,
             Model = dto.Model,
             Status = dto.Status,
+            ImageStorageId = S3Id,
             CreatedAt = DateTime.Now.ToUniversalTime(),
             UpdatedAt = DateTime.Now.ToUniversalTime(),
         }; 

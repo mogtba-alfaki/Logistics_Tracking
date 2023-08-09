@@ -16,13 +16,16 @@ public class TruckDto {
     [FromForm(Name = "TruckImage")]
     public IFormFile? TruckImage { get; set; }
 
-    public TruckDto(string id, string model, string color, int status, DateTime createdAt, DateTime updatedAt) {
+    public string ImageStorageId { get; set; }
+
+    public TruckDto(string id, string model, string color, int status, string imageStorageId, DateTime createdAt, DateTime updatedAt) {
         Id = id;
         Model = model;
         Color = color;
         Status = status;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
+        ImageStorageId = imageStorageId;
     }
 
     public TruckDto() {

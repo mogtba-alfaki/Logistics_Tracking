@@ -1,4 +1,3 @@
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Entities; 
 
@@ -7,10 +6,13 @@ public class Truck: BaseEntity {
     public string Color { get; set; }
     public int Status { get; set; }
     
-    public Truck(string model, string color, int status) {
+    public string ImageStorageId { get; set; }
+    
+    public Truck(string model, string color, int status, string imageStorageId) {
         Model = model;
         Color = color;
         Status = status;
+        ImageStorageId = imageStorageId;
     }
 
     public Truck() {
@@ -22,6 +24,7 @@ public class Truck: BaseEntity {
         Model: {Model},
         Color: {Color},
         Status: {Status},
+        ImageStorageID: {ImageStorageId},
         """;
     }
 }
