@@ -21,4 +21,5 @@
 # Ignore all .gitignore files
 
 **/.idea/*
-.env 
+.env
+Api/Storage 

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Core.Exceptions;
+using Infrastructure.Helpers.AwsS3;
 using Microsoft.AspNetCore.Diagnostics;
 
 namespace Api.Helpers;
@@ -11,18 +12,26 @@ public static class ExceptionMiddlewareExtension {
                 var exception = context.Features.Get<IExceptionHandlerFeature>().Error;
                 switch (exception) {
                     case UnCorrectTripStatusException:
-                        await HandleCoreLayerExceptionAsync(context, 
+                        await HandleExceptionAsync(context, 
                             "UnCorrectTripStatusException", exception.Message,
                             StatusCodes.Status400BadRequest);
                         break;
                     case RestrictedAreaInPathException:
-                        await HandleCoreLayerExceptionAsync(context,
+                        await HandleExceptionAsync(context,
                             "RestrictedAreaInPathException", exception.Message,
                             StatusCodes.Status400BadRequest); 
+                        break; 
+                    case AwsS3Exception:
+                        await HandleExceptionAsync(context, "AwsS3Exception",
+                            exception.Message, StatusCodes.Status500InternalServerError);
+                        break;
+                    case InvalidLoginCredentials:
+                        await HandleExceptionAsync(context, "InvalidLoginCredentials",
+                            exception.Message, StatusCodes.Status401Unauthorized);
                         break;
                     default:
                         var e = new Exception("Internal Server Error");
-                        await HandleCoreLayerExceptionAsync(context,
+                        await HandleExceptionAsync(context,
                             "InternalServerError", e.Message,
                             StatusCodes.Status500InternalServerError);
                         break; 
@@ -31,7 +40,7 @@ public static class ExceptionMiddlewareExtension {
         });
     }
     
-    private static async Task HandleCoreLayerExceptionAsync(HttpContext context, string exceptionName, string message, int statusCode) {
+    private static async Task HandleExceptionAsync(HttpContext context, string exceptionName, string message, int statusCode) {
         var response = new {
             type = $"www.logistics/tracking/{exceptionName}",
             title = exceptionName,

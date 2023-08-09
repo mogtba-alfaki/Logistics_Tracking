@@ -5,6 +5,8 @@ using Core.Trips;
 using Core.Trips.UseCases;
 using Core.Trucks;
 using Core.Trucks.UseCases;
+using Core.Users.UseCases;
+using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core; 
@@ -21,7 +23,9 @@ public static class CoreLayerServicesExtension {
         services.AddScoped<ListTripsUseCase, ListTripsUseCase>();
         services.AddScoped<EndTripUseCase, EndTripUseCase>(); 
         services.AddScoped<UpdateTripLocationUseCase, UpdateTripLocationUseCase>();
-        
+        services.AddScoped<UsersUseCases, UsersUseCases>();
+        services.AddScoped<UsersService, UsersService>(); 
+
         services.AddScoped<TripService, TripService>();
         services.AddScoped<MapHelper, MapHelper>(); 
         
