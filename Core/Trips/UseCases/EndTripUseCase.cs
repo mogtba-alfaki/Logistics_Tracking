@@ -7,12 +7,12 @@ using Domain.Entities;
 namespace Core.Trips.UseCases; 
 
 public class EndTripUseCase {
-    private readonly MapHelper _mapHelper;
+    private readonly MapsUtil _mapHelper;
     private readonly ITripRepository _repository;
     private readonly ITripLocationRepository _locationsRepository;
     private readonly ITruckRepository _truckRepository;
 
-    public EndTripUseCase(MapHelper mapHelper, ITripRepository repository, ITripLocationRepository locationsRepository, ITruckRepository truckRepository) {
+    public EndTripUseCase(MapsUtil mapHelper, ITripRepository repository, ITripLocationRepository locationsRepository, ITruckRepository truckRepository) {
         _mapHelper = mapHelper;
         _repository = repository;
         _locationsRepository = locationsRepository;

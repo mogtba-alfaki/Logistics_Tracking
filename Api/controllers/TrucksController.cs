@@ -1,7 +1,6 @@
+using Core.Helpers;
 using Core.Trucks;
 using Core.Trucks.Dto;
-using Domain.Entities;
-using Infrastructure.Util;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.controllers; 

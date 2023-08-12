@@ -1,7 +1,6 @@
-using Core.Users.UseCases;
+using Core.Helpers;
+using Core.Users;
 using Core.Users.UseCases.Dto;
-using Infrastructure.Util;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.controllers; 

@@ -9,12 +9,9 @@ namespace Core.Trucks.UseCases;
 
 public class TruckUseCases {
     private readonly ITruckRepository _repository;
-    private readonly MultiPartFileHandler _multiPartFileHandler;
     private readonly IObjectStorageProvider _awsS3;
-
-    public TruckUseCases(ITruckRepository repository, MultiPartFileHandler multiPartFileHandler, IObjectStorageProvider awsS3) {
+    public TruckUseCases(ITruckRepository repository, IObjectStorageProvider awsS3) {
         _repository = repository;
-        _multiPartFileHandler = multiPartFileHandler;
         _awsS3 = awsS3;
     }
 
@@ -24,7 +21,7 @@ public class TruckUseCases {
 
     public async Task<Truck> AddTruck(TruckDto dto) {
         IFormFile truckImage = dto.TruckImage;
-        var imagePath = await _multiPartFileHandler.UploadAsync(truckImage);
+        var imagePath = await MultiPartFileHandler.UploadAsync(truckImage);
         var S3Id = await _awsS3.UploadImageAsync(imagePath);
         File.Delete(imagePath);
         

@@ -2,10 +2,10 @@ using Microsoft.AspNetCore.Http;
 
 namespace Core.Helpers; 
 
-public class MultiPartFileHandler {
-    private readonly string StorageDir = Directory.GetCurrentDirectory() + "/Storage"; 
+public static class MultiPartFileHandler {
+    private static readonly string StorageDir = Directory.GetCurrentDirectory() + "/Storage"; 
 
-    public async Task<string> UploadAsync(IFormFile file) {
+    public static async Task<string> UploadAsync(IFormFile file) {
         var dir = Directory.Exists(StorageDir);
         if (!dir) {
             Directory.CreateDirectory(StorageDir); 
