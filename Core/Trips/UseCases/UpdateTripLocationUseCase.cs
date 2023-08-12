@@ -1,26 +1,24 @@
 using Core.Enums;
 using Core.Exceptions;
+using Core.Helpers;
+using Core.Repositories;
 using Core.Trips.Dto;
 using Domain.Entities;
-using Infrastructure.Repositories;
-using Infrastructure.Util;
 
 namespace Core.Trips.UseCases; 
 
 public class UpdateTripLocationUseCase {
-    private readonly TripLocationsRepository _tripLocationsRepository;
-    private readonly TripRepository _tripRepository;
+    private readonly ITripLocationRepository _tripLocationsRepository;
+    private readonly ITripRepository _tripRepository;
 
-    public UpdateTripLocationUseCase(TripLocationsRepository tripLocationsRepository, TripRepository tripRepository) {
+    public UpdateTripLocationUseCase(ITripLocationRepository tripLocationsRepository, ITripRepository tripRepository) {
         _tripLocationsRepository = tripLocationsRepository;
         _tripRepository = tripRepository;
     }
 
     public async Task<bool> Update(TripLocationDto dto) {
-        Console.WriteLine(dto);
-        var trip = await _tripRepository.GetTripById(dto.TripId);
-        
-        
+        var trip = await _tripRepository.GetById(dto.TripId);        
+
         if (trip.Status != (int) TripStatuses.STARTED) {
             throw new UnCorrectTripStatusException("Trip Not Started Yet"); 
         } 
@@ -44,7 +42,7 @@ public class UpdateTripLocationUseCase {
         tripLocation.TimeSpent = CalculateTimeSpentAtLocation(tripLocation,
             previousTripLocation); 
         
-        await _tripLocationsRepository.AddTripLocation(tripLocation);
+        await _tripLocationsRepository.Create(tripLocation);
         return true;
     }
 

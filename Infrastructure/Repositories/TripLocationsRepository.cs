@@ -1,30 +1,24 @@
+using Core.Repositories;
 using Domain.Entities;
 using Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories; 
 
-public class TripLocationsRepository {
-    private readonly TrackingContext _trackingContext;
+public class TripLocationsRepository:  BaseRepository<TripLocation>, ITripLocationRepository {
+    private readonly TrackingContext _context; 
+    public  TripLocationsRepository(TrackingContext context) : base(context) {
 
-    public TripLocationsRepository(TrackingContext trackingContext) {
-        _trackingContext = trackingContext;
-    }
-
-    public async Task<TripLocation> AddTripLocation(TripLocation location) {
-        var result = await  _trackingContext.TripLocations.AddAsync(location);
-            await _trackingContext.SaveChangesAsync(); 
-            return result.Entity;        
     }
 
     public async Task<List<TripLocation>> GetTripLocationsByTripId(string tripId) {
-        var locations = await _trackingContext.TripLocations 
+        var locations = await _context.TripLocations 
             .Where(x => x.TripId == tripId).ToListAsync();
         return locations; 
     }
 
     public async Task<TripLocation> GetLatestTripLocation(string tripId) {
-        var location = await _trackingContext.TripLocations
+        var location = await _context.TripLocations
             .Where(x => x.TripId == tripId)
             .OrderBy(x => x.CreatedAt)
             .LastAsync();

@@ -1,33 +1,30 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Runtime.Intrinsics.Arm;
-using System.Security.Authentication;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using Core.Enums;
 using Core.Exceptions;
+using Core.Helpers;
+using Core.Repositories;
 using Core.Users.UseCases.Dto;
 using Domain.Entities;
-using Infrastructure.Repositories;
-using Infrastructure.Util;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Core.Users.UseCases; 
 
 public class UsersUseCases {
-    private readonly UserRepository _userRepository;
+    private readonly IUserRepository _userRepository;
 
-    public UsersUseCases(UserRepository userRepository) {
+    public UsersUseCases(IUserRepository userRepository) {
         _userRepository = userRepository;
     }
 
     public async Task<List<User>> ListUsers(CustomQueryParameters customQueryParameters) {
-        return await _userRepository.ListUsers(customQueryParameters); 
+        return await _userRepository.List(customQueryParameters); 
     }
 
     public async Task<User> Signup(SignInDto dto) {
         var hashedPassword = HashHelper.ComputeHash(dto.Password); 
-        var u = new User {
+        var user = new User {
             Id = IdGenerator.Generate(),
             Username = dto.Username,
             Password = hashedPassword,
@@ -37,7 +34,7 @@ public class UsersUseCases {
             Token = null,
         };  
         
-        return await _userRepository.AddUser(u); 
+        return await _userRepository.Create(user); 
     }
 
     public async Task<string> Login(UserLoginDto dto) {

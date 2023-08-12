@@ -1,6 +1,4 @@
 using Domain.Entities;
-using Infrastructure.Util;
-
 namespace Core.Trucks.Dto; 
 
 public class TruckMapper {

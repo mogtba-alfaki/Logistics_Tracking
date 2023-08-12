@@ -5,8 +5,8 @@ using Core.Trips;
 using Core.Trips.UseCases;
 using Core.Trucks;
 using Core.Trucks.UseCases;
+using Core.Users;
 using Core.Users.UseCases;
-using Domain.Entities;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core; 

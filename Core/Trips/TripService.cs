@@ -1,7 +1,7 @@
+using Core.Helpers;
 using Core.Trips.Dto;
 using Core.Trips.UseCases;
 using Domain.Entities;
-using Infrastructure.Util;
 
 namespace Core.Trips; 
 

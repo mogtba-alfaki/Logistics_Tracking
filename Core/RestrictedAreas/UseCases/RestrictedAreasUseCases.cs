@@ -1,19 +1,19 @@
+using Core.Helpers;
+using Core.Repositories;
 using Core.RestrictedAreas.Dto;
 using Domain.Entities;
-using Infrastructure.Repositories;
-using Infrastructure.Util;
 
 namespace Core.RestrictedAreas.UseCases; 
 
 public class RestrictedAreasUseCases {
-    private readonly TrackingGenericRepository _repository;
+    private readonly IRestrictedAreaRepository _repository;
 
-    public RestrictedAreasUseCases(TrackingGenericRepository repository) {
+    public RestrictedAreasUseCases(IRestrictedAreaRepository repository) {
         _repository = repository;
     }
 
     public async Task<List<RestrictedArea>> ListRestrictedAreas(CustomQueryParameters queryParameters) {
-        return await _repository.ListRestrictedAreas(queryParameters); 
+        return await _repository.List(queryParameters); 
     }
 
     public async Task<RestrictedArea> AddRestrictedArea(AddRestrictedArea restrictedAreaDto) {
@@ -25,15 +25,15 @@ public class RestrictedAreasUseCases {
             CreatedAt = DateTime.Now.ToUniversalTime(),
             UpdatedAt = DateTime.Now.ToUniversalTime(),
         };
-        return await _repository.AddRestrictedArea(area); 
+        return await _repository.Create(area); 
     }
 
     public async Task<bool> DeleteRestrictedArea(string restrictedAreaId) {
-        return await _repository.DeleteRestrictedArea(restrictedAreaId); 
+        return await _repository.Delete(restrictedAreaId); 
     }
 
     public async Task<GetRestrictedAreaDto> GetRestrictedAreaById(string id) {
-        var entry =  await _repository.GetRestrictedAreaById(id);
+        var entry =  await _repository.GetById(id);
         var RestrictedAreaDto = RestrictedAreaMapper.MapEntityToGetterDto(entry);
         return RestrictedAreaDto; 
     }

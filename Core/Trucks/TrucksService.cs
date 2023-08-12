@@ -1,7 +1,7 @@
+using Core.Helpers;
 using Core.Trucks.Dto;
 using Core.Trucks.UseCases;
 using Domain.Entities;
-using Infrastructure.Util;
 
 namespace Core.Trucks; 
 

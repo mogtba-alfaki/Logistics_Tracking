@@ -1,26 +1,26 @@
 using Core.Enums;
 using Core.Exceptions;
 using Core.Geofencing;
+using Core.Repositories;
 using Domain.Entities;
-using Infrastructure.Repositories;
 
 namespace Core.Trips.UseCases; 
 
 public class EndTripUseCase {
     private readonly MapHelper _mapHelper;
-    private readonly TripRepository _repository;
-    private readonly TripLocationsRepository _locationsRepository;
-    private readonly TrackingGenericRepository _trackingGenericRepository;
+    private readonly ITripRepository _repository;
+    private readonly ITripLocationRepository _locationsRepository;
+    private readonly ITruckRepository _truckRepository;
 
-    public EndTripUseCase(MapHelper mapHelper, TripRepository repository, TripLocationsRepository locationsRepository, TrackingGenericRepository trackingGenericRepository) {
+    public EndTripUseCase(MapHelper mapHelper, ITripRepository repository, ITripLocationRepository locationsRepository, ITruckRepository truckRepository) {
         _mapHelper = mapHelper;
         _repository = repository;
         _locationsRepository = locationsRepository;
-        _trackingGenericRepository = trackingGenericRepository;
+        _truckRepository = truckRepository;
     }
 
     public async Task<Trip>  End(string tripId) {
-        var trip = await _repository.GetTripById(tripId);
+        var trip = await _repository.GetById(tripId);
         
         if (trip.Status != (int) TripStatuses.STARTED) {
             throw new UnCorrectTripStatusException("Trip cannot be ended at this current status"); 
@@ -36,9 +36,9 @@ public class EndTripUseCase {
         trip.FullRoute = fullTripRoute;
         trip.Status = (int) TripStatuses.ENDED;
 
-        var truck = await _trackingGenericRepository.GetTruckById(trip.TruckId); 
-        await _trackingGenericRepository
+        var truck = await _truckRepository.GetById(trip.TruckId); 
+        await _truckRepository
             .ChangeTruckStatus(truck.Id,(int) TruckStatuses.IDLE);
-        return await _repository.UpdateTrip(trip);
+        return await _repository.Update(trip);
     }
 }

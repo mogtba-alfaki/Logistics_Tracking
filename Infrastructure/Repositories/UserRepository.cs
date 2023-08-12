@@ -1,31 +1,15 @@
+using Core.Helpers;
+using Core.Repositories;
 using Domain.Entities;
 using Infrastructure.Database;
-using Infrastructure.Util;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories; 
 
-public class UserRepository {
+public class UserRepository: BaseRepository<User>, IUserRepository {
     private readonly TrackingContext _context;
-    public UserRepository(TrackingContext context) {
-        _context = context;
-    }
 
-    public async Task<List<User>> ListUsers(CustomQueryParameters options) {
-        var pageNumber = options.PageNumber;
-        var pageSize = options.PageSize;
-        var offset = pageNumber * pageSize;
-        var result = await _context.Users
-            .Skip(offset)
-            .Take(pageSize)
-            .ToListAsync();
-        return result;
-    }
-
-    public async Task<User>  AddUser(User user) {
-        var result = await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync(); 
-        return result.Entity; 
+    public UserRepository(TrackingContext context) : base(context) {
     }
 
     public async Task<User> GetByUsername(string username) {
@@ -35,5 +19,21 @@ public class UserRepository {
             throw new Exception("Not Found"); 
         }
         return result;
+    }
+
+    public override async Task<User> Update(User user) {
+        var userFound = await _context.Users.FindAsync(user.Id);
+        if (userFound is null) {
+            throw new Exception("Not Found"); 
+        }
+
+        userFound.Password = user.Password;
+        userFound.Username = user.Username;
+        userFound.Token = user.Token;
+        userFound.RoleId = user.RoleId;
+        userFound.UpdatedAt = DateTime.Now.ToUniversalTime();
+
+        await _context.SaveChangesAsync();
+        return userFound;
     }
 }

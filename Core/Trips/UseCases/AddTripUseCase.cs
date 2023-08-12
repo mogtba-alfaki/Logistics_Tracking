@@ -1,23 +1,25 @@
 using Core.Enums;
 using Core.Exceptions;
+using Core.Helpers;
+using Core.Repositories;
 using Core.Trips.Dto;
 using Domain.Entities;
-using Infrastructure.Repositories;
-using Infrastructure.Util;
 
 namespace Core.Trips.UseCases; 
 
 public class AddTripUseCase {
-    private readonly TripRepository _tripRepository;
-    private readonly TrackingGenericRepository _trackingGenericRepository; 
-    
-    public AddTripUseCase(TripRepository tripRepository, TrackingGenericRepository trackingGenericRepository) {
+    private readonly ITripRepository _tripRepository;
+    private readonly IShipmentRepository _shipmentRepository;
+    private readonly ITruckRepository _truckRepository;
+
+    public AddTripUseCase(ITripRepository tripRepository, IShipmentRepository shipmentRepository, ITruckRepository truckRepository) {
         _tripRepository = tripRepository;
-        _trackingGenericRepository = trackingGenericRepository; 
+        _shipmentRepository = shipmentRepository;
+        _truckRepository = truckRepository;
     }
 
     public async Task<Trip> AddTrip(AddTripDto dto) {
-        var truck = await _trackingGenericRepository.GetTruckById(dto.TruckId);
+        var truck = await _truckRepository.GetById(dto.TruckId);
         if (truck == null ||  truck.Status == (int) TruckStatuses.ON_TRIP) {
             throw new UnCorrectTruckStatusException("Truck is Already on Trip"); 
         }
@@ -34,7 +36,7 @@ public class AddTripUseCase {
             Type = dto.Shipment.Type,
         }; 
         
-       var Shipment =  await _trackingGenericRepository.AddShipment(tripShipment); 
+       var Shipment =  await _shipmentRepository.Create(tripShipment); 
         
         var trip = new Trip {
             Id = IdGenerator.Generate(),
@@ -46,8 +48,8 @@ public class AddTripUseCase {
             UpdatedAt = DateTime.Now.ToUniversalTime(),
         };
         
-        var result = await _tripRepository.AddTrip(trip);
-        await _trackingGenericRepository.ChangeTruckStatus(truck.Id,(int) TruckStatuses.ON_TRIP);
+        var result = await _tripRepository.Create(trip);
+        await _truckRepository.ChangeTruckStatus(truck.Id,(int) TruckStatuses.ON_TRIP);
         return result;
     }
 }

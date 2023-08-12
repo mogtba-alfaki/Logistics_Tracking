@@ -1,24 +1,24 @@
+using Core.Helpers;
+using Core.Repositories;
 using Core.Trips.Dto;
 using Domain.Entities;
-using Infrastructure.Repositories;
-using Infrastructure.Util;
 
 namespace Core.Shipments.UseCases; 
 
 public class ShipmentUseCases {
-    private readonly TrackingGenericRepository _repository;
+    private readonly IShipmentRepository _repository;
 
-    public ShipmentUseCases(TrackingGenericRepository repository) {
+    public ShipmentUseCases(IShipmentRepository repository) {
         _repository = repository;
     } 
     
     
     public async Task<List<Shipment>> ListShipments(CustomQueryParameters options) {
-        return await _repository.ListShipments(options); 
+        return await _repository.List(options); 
     }
 
     public async Task<Shipment> GetShipmentById(string id) {
-        return await _repository.GetShipmentById(id); 
+        return await _repository.GetById(id); 
     }
 
     public async Task<Shipment> AddShipment(AddShipmentDto shipment) {
@@ -33,10 +33,10 @@ public class ShipmentUseCases {
             CreatedAt = DateTime.Now.ToUniversalTime(),
             UpdatedAt = DateTime.Now.ToUniversalTime(),
         }; 
-        return await _repository.AddShipment(Shipment); 
+        return await _repository.Create(Shipment); 
     } 
     
     public async Task<bool> DeleteShipment(string id) {
-        return await _repository.DeleteShipment(id); 
+        return await _repository.Delete(id); 
     }
 }

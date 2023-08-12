@@ -1,7 +1,7 @@
+using Core.Helpers;
 using Core.Shipments.UseCases;
 using Core.Trips.Dto;
 using Domain.Entities;
-using Infrastructure.Util;
 
 namespace Core.Shipments; 
 

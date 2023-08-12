@@ -1,8 +1,9 @@
+using Core.Helpers;
+using Core.Users.UseCases;
 using Core.Users.UseCases.Dto;
 using Domain.Entities;
-using Infrastructure.Util;
 
-namespace Core.Users.UseCases; 
+namespace Core.Users; 
 
 public class UsersService {
     private readonly UsersUseCases _useCases;

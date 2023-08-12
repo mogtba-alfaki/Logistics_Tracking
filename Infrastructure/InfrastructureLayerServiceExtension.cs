@@ -2,7 +2,6 @@ using System.Text;
 using Core.Geofencing;
 using Infrastructure.Database;
 using Infrastructure.Repositories;
-using Infrastructure.Util;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -13,13 +12,10 @@ public static class InfrastructureLayerServiceExtension {
     
     public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services) {
         services.AddScoped<RestrictedAreaRepository, RestrictedAreaRepository>();
-        services.AddScoped<TrackingGenericRepository, TrackingGenericRepository>(); 
         services.AddScoped<TripLocationsRepository, TripLocationsRepository>();
         services.AddScoped<TripRepository, TripRepository>();
         services.AddScoped<IMapProvider, GraphHopper>();
         services.AddScoped<UserRepository, UserRepository>();
-
-        services.AddScoped<MultiPartFileHandler, MultiPartFileHandler>();
         return services;
     }
 

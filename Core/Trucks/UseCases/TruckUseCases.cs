@@ -1,29 +1,31 @@
+using Core.Helpers;
+using Core.Interfaces;
+using Core.Repositories;
 using Core.Trucks.Dto;
 using Domain.Entities;
-using Infrastructure.Helpers.AwsS3;
-using Infrastructure.Repositories;
-using Infrastructure.Util;
 using Microsoft.AspNetCore.Http;
 
 namespace Core.Trucks.UseCases; 
 
 public class TruckUseCases {
-    private readonly TrackingGenericRepository _repository;
-    private readonly MultiPartFileHandler _multiPartFileHandler; 
-    
-    public TruckUseCases(TrackingGenericRepository repository, MultiPartFileHandler multiPartFileHandler) {
+    private readonly ITruckRepository _repository;
+    private readonly MultiPartFileHandler _multiPartFileHandler;
+    private readonly IObjectStorageProvider _awsS3;
+
+    public TruckUseCases(ITruckRepository repository, MultiPartFileHandler multiPartFileHandler, IObjectStorageProvider awsS3) {
         _repository = repository;
         _multiPartFileHandler = multiPartFileHandler;
+        _awsS3 = awsS3;
     }
 
     public async Task<List<Truck>> ListTrucks(CustomQueryParameters queryParameters) {
-        return await _repository.ListTrucks(queryParameters); 
+        return await _repository.List(queryParameters); 
     }
 
     public async Task<Truck> AddTruck(TruckDto dto) {
         IFormFile truckImage = dto.TruckImage;
         var imagePath = await _multiPartFileHandler.UploadAsync(truckImage);
-        var S3Id = await AwsS3Helper.UploadImageAsync(imagePath);
+        var S3Id = await _awsS3.UploadImageAsync(imagePath);
         File.Delete(imagePath);
         
         // TODO refactor dto mappers 
@@ -37,16 +39,16 @@ public class TruckUseCases {
             CreatedAt = DateTime.Now.ToUniversalTime(),
             UpdatedAt = DateTime.Now.ToUniversalTime(),
         }; 
-        return await _repository.AddTruck(truck); 
+        return await _repository.Create(truck); 
     }
 
     public async Task<TruckDto> GetTruckById(string id) {
-        var truck = await _repository.GetTruckById(id);
+        var truck = await _repository.GetById(id);
         var truckDto = TruckMapper.MapEntityToDto(truck);
         return truckDto;
     }
     
     public async Task<bool> DeleteTruck(string id) {
-        return await _repository.DeleteTruck(id); 
+        return await _repository.Delete(id); 
     }
 }
