@@ -1,6 +1,9 @@
 using System.Text;
 using Core.Geofencing;
+using Core.Interfaces;
+using Core.Repositories;
 using Infrastructure.Database;
+using Infrastructure.Helpers.AwsS3;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,11 +14,16 @@ namespace Infrastructure;
 public static class InfrastructureLayerServiceExtension {
     
     public static IServiceCollection AddInfrastructureDependencies(this IServiceCollection services) {
-        services.AddScoped<RestrictedAreaRepository, RestrictedAreaRepository>();
-        services.AddScoped<TripLocationsRepository, TripLocationsRepository>();
-        services.AddScoped<TripRepository, TripRepository>();
+        services.AddScoped<IRestrictedAreaRepository, RestrictedAreaRepository>();
+        services.AddScoped<ITripLocationRepository, TripLocationsRepository>();
+        services.AddScoped<ITripRepository, TripRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IShipmentRepository, ShipmentRepository>(); 
+        services.AddScoped<ITruckRepository, TruckRepository>();
+        
         services.AddScoped<IMapProvider, GraphHopper>();
-        services.AddScoped<UserRepository, UserRepository>();
+        services.AddScoped<IObjectStorageProvider, AwsS3Helper>(); 
+        
         return services;
     }
 
