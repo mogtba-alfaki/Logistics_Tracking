@@ -1,6 +1,5 @@
 using Core.RestrictedAreas;
 using Core.RestrictedAreas.Dto;
-using Infrastructure.Util;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.controllers;
