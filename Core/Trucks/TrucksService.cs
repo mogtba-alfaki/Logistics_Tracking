@@ -27,4 +27,8 @@ public class TrucksService {
     public async Task<TruckDto> GetTruckById(string id) {
         return await _truckUseCases.GetTruckById(id); 
     }
+
+    public async Task<TruckDto> GetTruckProfile(string id) {
+        return await _truckUseCases.GetTruckProfile(id); 
+    }
 }

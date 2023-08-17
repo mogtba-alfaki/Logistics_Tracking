@@ -44,6 +44,21 @@ public class TruckUseCases {
         var truckDto = TruckMapper.MapEntityToDto(truck);
         return truckDto;
     }
+
+    public async Task<TruckDto> GetTruckProfile(string id) {
+        var truck = await _repository.GetById(id);
+        var truckImage = await _awsS3.GetImageAsync(truck.ImageStorageId);
+        return new TruckDto {
+            Id = truck.Id,
+            TruckImage = (IFormFile) truckImage,
+            Status = truck.Status,
+            Color = truck.Color,
+            Model = truck.Model,
+            ImageStorageId = truck.ImageStorageId,
+            CreatedAt = truck.CreatedAt,
+            UpdatedAt = truck.UpdatedAt,
+        };
+    }
     
     public async Task<bool> DeleteTruck(string id) {
         return await _repository.Delete(id); 

@@ -31,11 +31,18 @@ public class TrucksController: ControllerBase {
             var result = await _service.DeleteTruck(id);
             return Ok(result);
         }
-
+ 
     [HttpGet]
     [Route("truck")]
     public async Task<IActionResult> GetTruckById([FromQuery] string id) {
             var result = await _service.GetTruckById(id);
             return Ok(result);
         }
+
+    [HttpGet]
+    [Route("profile")]
+    public async Task<IActionResult> GetTruckProfile([FromQuery] string id) {
+        var result = await _service.GetTruckProfile(id);
+        return Ok(result); 
+    }
 }

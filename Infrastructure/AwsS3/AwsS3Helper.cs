@@ -27,7 +27,16 @@ public class AwsS3Helper: IObjectStorageProvider {
     }
 
     public async Task<GetImageResponse> GetImageAsync(string bucketId) {
-        throw new NotImplementedException(); 
+        var GetObjectRequest = new GetObjectRequest {
+            Key = S3_KEY,
+            BucketName = BUCKET_NAME,
+        };
+        var response = await client.GetObjectAsync(GetObjectRequest);
+        if (response.HttpStatusCode == HttpStatusCode.OK) {
+            return new GetImageResponse(); 
+        }
+
+        throw new AwsS3Exception("Exception While Retrieving The Image"); 
     }
 
     public 
