@@ -29,6 +29,10 @@ public static class ExceptionMiddlewareExtension {
                         await HandleExceptionAsync(context, "InvalidLoginCredentials",
                             exception.Message, StatusCodes.Status401Unauthorized);
                         break;
+                    case UnCorrectTruckStatusException:
+                        await HandleExceptionAsync(context, "UnCorrectTruckStatus",
+                            exception.Message, StatusCodes.Status400BadRequest);
+                        break;
                     default:
                         var e = new Exception("Internal Server Error");
                         await HandleExceptionAsync(context,
