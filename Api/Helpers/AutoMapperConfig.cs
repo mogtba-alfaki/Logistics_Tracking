@@ -14,7 +14,7 @@ public class AutoMapperConfig: Profile {
         
         CreateMap<TruckDto, Truck>().ReverseMap(); 
         
-        CreateMap<AddShipmentDto, Shipment>().ReverseMap();
+        CreateMap<ShipmentDto, Shipment>().ReverseMap();
 
         CreateMap<AddRestrictedArea, RestrictedArea>().ReverseMap();
         CreateMap<GetRestrictedAreaDto, RestrictedArea>().ReverseMap();

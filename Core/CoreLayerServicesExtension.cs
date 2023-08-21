@@ -27,7 +27,7 @@ public static class CoreLayerServicesExtension {
         services.AddScoped<UsersService, UsersService>(); 
 
         services.AddScoped<TripService, TripService>();
-        services.AddScoped<MapsUtil, MapsUtil>(); 
+        services.AddScoped<SpatialDataUtility, SpatialDataUtility>(); 
         
         return services;
     }

@@ -2,7 +2,7 @@ using Domain.Entities;
 
 namespace Core.Geofencing; 
 
-public class MapsUtil {
+public class SpatialDataUtility {
     private ISpatialDataServices _spatialDataServices;
 
     public async Task<string> GetEncodedRoute(string startPoint, string endPoint) {

@@ -7,5 +7,5 @@ public class AddTripDto {
     public int Status { get; set; }
     public string TruckId { get; set; }
     
-    public AddShipmentDto Shipment { get; set; }
+    public ShipmentDto Shipment { get; set; }
 }  

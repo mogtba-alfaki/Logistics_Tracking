@@ -21,7 +21,7 @@ public class ShipmentUseCases {
         return await _repository.GetById(id); 
     }
 
-    public async Task<Shipment> AddShipment(AddShipmentDto shipment) {
+    public async Task<Shipment> AddShipment(ShipmentDto shipment) {
         var Shipment = new Shipment {
             Breakable = shipment.Breakable,
             StorageTemperature = shipment.StorageTemperature,

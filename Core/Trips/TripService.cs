@@ -17,10 +17,10 @@ public class TripService {
         EndTripUseCase = endTripUseCase;
     }
 
-    public async Task<List<Trip>> ListTrips(CustomQueryParameters customQueryParameters) {
+    public async Task<List<GetTripDto>> ListTrips(CustomQueryParameters customQueryParameters) {
         return await ListTripsUseCase.ListTrips(customQueryParameters); 
     }
-    public async Task<Trip> AddTrip(AddTripDto dto) {
+    public async Task<GetTripDto> AddTrip(AddTripDto dto) {
         return await AddTripUseCase.AddTrip(dto); 
     }
 
@@ -28,7 +28,7 @@ public class TripService {
         return await UpdateTripLocationUseCase.Update(dto); 
     }
     
-    public async Task<Trip> EndTrip(string tripId) {
+    public async Task<GetTripDto> EndTrip(string tripId) {
         return await EndTripUseCase.End(tripId); 
     }
 }
