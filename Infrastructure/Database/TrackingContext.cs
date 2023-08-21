@@ -55,8 +55,16 @@ public class TrackingContext: DbContext{
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
-        // TODO LOAD FROM ENVIROMENT VARIABLES
-        var connectionString = "User Id=postgres; Password=postgres; Host=172.17.0.3; Port=5432;Database=tracking; Pooling=true;";
+        var DB_USER = Environment.GetEnvironmentVariable("DB_USER");
+        var DB_PASSWORD = Environment.GetEnvironmentVariable("DB_PASSWORD");
+        var PORT = Environment.GetEnvironmentVariable("PORT");
+        var DATABASE = Environment.GetEnvironmentVariable("DATABASE");
+        var HOST = Environment.GetEnvironmentVariable("HOST"); 
+        
+        var connectionString = 
+            $"User Id={DB_USER}; Password={DB_PASSWORD};" +
+            $" Host={HOST}; Port={PORT};Database={DATABASE}; Pooling=true;";
+        Console.WriteLine(connectionString);
         optionsBuilder.UseNpgsql(connectionString);
     }
 

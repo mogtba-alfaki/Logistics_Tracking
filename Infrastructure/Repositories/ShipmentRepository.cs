@@ -5,9 +5,10 @@ using Infrastructure.Database;
 namespace Infrastructure.Repositories; 
 
 public class ShipmentRepository: BaseRepository<Shipment>, IShipmentRepository {
-    private readonly TrackingContext _context;  
-    
+    private readonly TrackingContext _context;
+
     public ShipmentRepository(TrackingContext context) : base(context) {
+        _context = context;
     }
 
     public override async Task<Shipment> Update(Shipment shipment) {

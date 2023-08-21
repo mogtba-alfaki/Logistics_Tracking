@@ -15,6 +15,11 @@ public class LocationCoordinate: BaseEntity {
         Altitude = altitude;
     }
 
+    public LocationCoordinate(string latitude, string longitude) {
+        Latitude = latitude;
+        Longitude = longitude; 
+    }
+    
     public LocationCoordinate() {
     }
 

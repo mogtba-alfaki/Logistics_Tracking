@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Core.Geofencing; 
 
-public class GraphHopper: IMapProvider {
+public class GraphHopper {
     private readonly HttpClient client = new HttpClient();
     private string testingPoint1 = "15.666470000000,32.627213333333";
     private string testingPoint2 = "15.609442000000,32.568962000000"; 

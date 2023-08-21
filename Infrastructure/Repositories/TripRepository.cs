@@ -9,8 +9,10 @@ namespace Infrastructure.Repositories;
 
 // ** Refactor this to use the generic repository and implement the interface 
 public class  TripRepository: BaseRepository<Trip>, ITripRepository {
-    private readonly TrackingContext _context; 
+    private readonly TrackingContext _context;
+
     public TripRepository(TrackingContext context) : base(context) {
+        _context = context;
     }
 
     public override async Task<Trip> Update(Trip trip) {

@@ -32,7 +32,7 @@ public class EndTripUseCase {
         var startPoint = $"{tripLocations[0].Latitude},{tripLocations[0].Longitude}"; 
         var endPoint = $"{tripLocations[^1].Latitude},{tripLocations[^1].Longitude}";
 
-        var fullTripRoute = await _mapHelper.GetFullRoute(startPoint, endPoint);
+        var fullTripRoute = await _mapHelper.GetEncodedRoute(startPoint, endPoint);
         trip.FullRoute = fullTripRoute;
         trip.Status = (int) TripStatuses.ENDED;
 

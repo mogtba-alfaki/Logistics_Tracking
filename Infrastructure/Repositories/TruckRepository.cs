@@ -6,8 +6,9 @@ namespace Infrastructure.Repositories;
 
 public class TruckRepository: BaseRepository<Truck>, ITruckRepository {
     private readonly TrackingContext _context;
-    
+
     public TruckRepository(TrackingContext context) : base(context) {
+        _context = context;
     }
 
     public async Task<bool> ChangeTruckStatus(string id, int newStatus) {

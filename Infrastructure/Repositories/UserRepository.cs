@@ -10,6 +10,7 @@ public class UserRepository: BaseRepository<User>, IUserRepository {
     private readonly TrackingContext _context;
 
     public UserRepository(TrackingContext context) : base(context) {
+        _context = context;
     }
 
     public async Task<User> GetByUsername(string username) {
