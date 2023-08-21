@@ -14,6 +14,7 @@ builder.Services.ConfigureDbContext();
 builder.Services.AddCoreDependencies(); 
 builder.Services.AddInfrastructureDependencies();
 builder.Services.ConfigureJwtAuthentication();
+builder.Services.AddAutoMapper(typeof(AutoMapperConfig)); 
 
 var app = builder.Build();
 
