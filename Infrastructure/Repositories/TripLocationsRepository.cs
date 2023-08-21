@@ -6,9 +6,10 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories; 
 
 public class TripLocationsRepository:  BaseRepository<TripLocation>, ITripLocationRepository {
-    private readonly TrackingContext _context; 
-    public  TripLocationsRepository(TrackingContext context) : base(context) {
+    private readonly TrackingContext _context;
 
+    public TripLocationsRepository(TrackingContext context) : base(context) {
+        _context = context;
     }
 
     public async Task<List<TripLocation>> GetTripLocationsByTripId(string tripId) {

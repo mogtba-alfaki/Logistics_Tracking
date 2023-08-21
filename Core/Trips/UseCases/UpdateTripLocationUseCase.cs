@@ -1,5 +1,6 @@
 using Core.Enums;
 using Core.Exceptions;
+using Core.Geofencing;
 using Core.Helpers;
 using Core.Repositories;
 using Core.Trips.Dto;
@@ -10,20 +11,42 @@ namespace Core.Trips.UseCases;
 public class UpdateTripLocationUseCase {
     private readonly ITripLocationRepository _tripLocationsRepository;
     private readonly ITripRepository _tripRepository;
+    private readonly IRestrictedAreaRepository _restrictedAreaRepository; 
+    private readonly ISpatialDataServices _spatialDataServices;
 
-    public UpdateTripLocationUseCase(ITripLocationRepository tripLocationsRepository, ITripRepository tripRepository) {
+
+    public UpdateTripLocationUseCase(ITripLocationRepository tripLocationsRepository, ITripRepository tripRepository, IRestrictedAreaRepository restrictedAreaRepository, ISpatialDataServices spatialDataServices) {
         _tripLocationsRepository = tripLocationsRepository;
         _tripRepository = tripRepository;
+        _restrictedAreaRepository = restrictedAreaRepository;
+        _spatialDataServices = spatialDataServices;
     }
 
     public async Task<bool> Update(TripLocationDto dto) {
         var trip = await _tripRepository.GetById(dto.TripId);        
-
+        
         if (trip.Status != (int) TripStatuses.STARTED) {
-            throw new UnCorrectTripStatusException("Trip Not Started Yet"); 
+            throw new UnCorrectTripStatusException("Trip Not Started"); 
         } 
         
-        // TODO should check if the trip is on a restricted area 
+        var tripRestrictedAreas = await _restrictedAreaRepository
+            .GetByTripId(trip.Id);
+        
+        foreach (var area in tripRestrictedAreas) {
+            try {
+                var areaViolated  = await _spatialDataServices.IsLocationWithinPolygon(area.AreaPolygon, 
+                new LocationCoordinate(dto.Latitude, dto.Longitude));
+                if (areaViolated) {
+                    area.Violated = true; 
+                    await _restrictedAreaRepository.Update(area); 
+                    throw new RestrictedAreaInPathException("Area Violated"); 
+                }
+            }
+            catch (Exception exception) {
+                throw new SpatialDataApisException(exception.Message); 
+            }
+        }
+        
         var previousTripLocation = await _tripLocationsRepository.GetLatestTripLocation(trip.Id);
         
         var tripLocation = new TripLocation {
