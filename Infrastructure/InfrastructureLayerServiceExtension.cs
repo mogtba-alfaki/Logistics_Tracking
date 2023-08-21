@@ -4,6 +4,7 @@ using Core.Interfaces;
 using Core.Repositories;
 using Infrastructure.Database;
 using Infrastructure.Helpers.AwsS3;
+using Infrastructure.MapProvider;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ public static class InfrastructureLayerServiceExtension {
         services.AddScoped<IShipmentRepository, ShipmentRepository>(); 
         services.AddScoped<ITruckRepository, TruckRepository>();
         
-        services.AddScoped<IMapProvider, GraphHopper>();
+        services.AddScoped<ISpatialDataServices, SpatialDataServices>();
         services.AddScoped<IObjectStorageProvider, AwsS3Helper>(); 
         
         return services;
