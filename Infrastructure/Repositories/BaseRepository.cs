@@ -31,7 +31,12 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntit
     }
 
     public async Task<T> GetById(string id) {
-       return  await _context.Set<T>().FindAsync(id);
+       var entity = await _context.Set<T>().FindAsync(id);
+       if (entity is null) {
+           throw new Exception("Not Found"); 
+       }
+
+       return entity;
     }
 
     public async Task<bool> Delete(string id) {

@@ -5,6 +5,7 @@ using Core.Enums;
 using Core.Exceptions;
 using Core.Helpers;
 using Core.Repositories;
+using Core.RestrictedAreas.Dto;
 using Core.Users.UseCases.Dto;
 using Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
@@ -13,16 +14,18 @@ namespace Core.Users.UseCases;
 
 public class UsersUseCases {
     private readonly IUserRepository _userRepository;
-
-    public UsersUseCases(IUserRepository userRepository) {
+    private readonly UsersMapper _mapper; 
+    public UsersUseCases(IUserRepository userRepository, UsersMapper mapper) {
         _userRepository = userRepository;
+        _mapper = mapper; 
     }
 
-    public async Task<List<User>> ListUsers(CustomQueryParameters customQueryParameters) {
-        return await _userRepository.List(customQueryParameters); 
+    public async Task<List<UserDto>> ListUsers(CustomQueryParameters customQueryParameters) {
+        var users =  await _userRepository.List(customQueryParameters);
+        return _mapper.MapList(users); 
     }
 
-    public async Task<User> Signup(SignInDto dto) {
+    public async Task<UserDto> Signup(SignInDto dto) {
         var hashedPassword = HashHelper.ComputeHash(dto.Password); 
         var user = new User {
             Id = IdGenerator.Generate(),
@@ -34,7 +37,8 @@ public class UsersUseCases {
             Token = null,
         };  
         
-        return await _userRepository.Create(user); 
+        var createdUser = await _userRepository.Create(user);
+        return _mapper.MapEntityToDto(createdUser); 
     }
 
     public async Task<string> Login(UserLoginDto dto) {
@@ -50,6 +54,7 @@ public class UsersUseCases {
         return token; 
     }
 
+    // TODO extract this method to a jwt helper class 
     private string GenerateJwtToken(User user) {
         var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
         var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");

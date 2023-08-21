@@ -11,21 +11,24 @@ namespace Core.RestrictedAreas.UseCases;
 public class RestrictedAreasUseCases {
     private readonly IRestrictedAreaRepository _repository;
     private readonly ITripRepository _tripRepository;
+    private readonly RestrictedAreaMapper _mapper;
 
-    public RestrictedAreasUseCases(IRestrictedAreaRepository repository, ITripRepository tripRepository) {
+    public RestrictedAreasUseCases(IRestrictedAreaRepository repository, ITripRepository tripRepository, RestrictedAreaMapper mapper) {
         _repository = repository;
         _tripRepository = tripRepository;
+        _mapper = mapper;
     }
 
-    public async Task<List<RestrictedArea>> ListRestrictedAreas(CustomQueryParameters queryParameters) {
-        return await _repository.List(queryParameters); 
+    public async Task<List<GetRestrictedAreaDto>> ListRestrictedAreas(CustomQueryParameters queryParameters) {
+        var areas = await _repository.List(queryParameters);
+        return _mapper.MapList(areas); 
     }
 
-    public async Task<RestrictedArea> AddRestrictedArea(AddRestrictedArea restrictedAreaDto) {
+    public async Task<GetRestrictedAreaDto> AddRestrictedArea(AddRestrictedArea restrictedAreaDto) {
         var trip = await _tripRepository.GetById(restrictedAreaDto.TripId);
         
-        if (trip is null || trip.Status == (int)TripStatuses.ENDED) {
-            throw new UnCorrectTripStatusException("Trip is not found or ended"); 
+        if (trip.Status == (int) TripStatuses.ENDED) {
+            throw new UnCorrectTripStatusException("Trip is ended"); 
         }
         
         var area = new RestrictedArea {
@@ -36,7 +39,9 @@ public class RestrictedAreasUseCases {
             CreatedAt = DateTime.Now.ToUniversalTime(),
             UpdatedAt = DateTime.Now.ToUniversalTime(),
         };
-        return await _repository.Create(area);
+        
+         await _repository.Create(area);
+         return _mapper.MapEntityToGetterDto(area); 
     }
 
     public async Task<bool> DeleteRestrictedArea(string restrictedAreaId) {
@@ -45,7 +50,6 @@ public class RestrictedAreasUseCases {
 
     public async Task<GetRestrictedAreaDto> GetRestrictedAreaById(string id) {
         var entry =  await _repository.GetById(id);
-        var RestrictedAreaDto = RestrictedAreaMapper.MapEntityToGetterDto(entry);
-        return RestrictedAreaDto; 
+        return _mapper.MapEntityToGetterDto(entry);
     }
 }

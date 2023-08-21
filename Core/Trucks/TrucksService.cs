@@ -12,11 +12,11 @@ public class TrucksService {
         _truckUseCases = truckUseCases;
     }
 
-    public async Task<List<Truck>> ListTrucks(CustomQueryParameters options) {
+    public async Task<List<TruckDto>> ListTrucks(CustomQueryParameters options) {
         return await _truckUseCases.ListTrucks(options); 
     }
     
-    public async Task<Truck> AddTruck(TruckDto truckDto) {
+    public async Task<TruckDto> AddTruck(TruckDto truckDto) {
         return await _truckUseCases.AddTruck(truckDto); 
     }
 
