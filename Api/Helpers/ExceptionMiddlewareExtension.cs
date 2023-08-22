@@ -32,6 +32,10 @@ public static class ExceptionMiddlewareExtension {
                     case UnCorrectTruckStatusException:
                         await HandleExceptionAsync(context, "UnCorrectTruckStatus",
                             exception.Message, StatusCodes.Status400BadRequest);
+                        break; 
+                    case NotFoundException:
+                        await HandleExceptionAsync(context, "NotFound",
+                            exception.Message, StatusCodes.Status404NotFound);
                         break;
                     default:
                         var e = new Exception("Internal Server Error");
