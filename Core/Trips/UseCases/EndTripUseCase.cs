@@ -1,6 +1,7 @@
 using Core.Enums;
 using Core.Exceptions;
 using Core.Geofencing;
+using Core.Interfaces;
 using Core.Repositories;
 using Domain.Entities;
 
@@ -11,15 +12,18 @@ public class EndTripUseCase {
     private readonly ITripRepository _repository;
     private readonly ITripLocationRepository _locationsRepository;
     private readonly ITruckRepository _truckRepository;
+    private readonly ILogger _logger;
 
-    public EndTripUseCase(MapsUtil mapHelper, ITripRepository repository, ITripLocationRepository locationsRepository, ITruckRepository truckRepository) {
+    public EndTripUseCase(MapsUtil mapHelper, ITripRepository repository, ITripLocationRepository locationsRepository, ITruckRepository truckRepository, ILogger logger) {
         _mapHelper = mapHelper;
         _repository = repository;
         _locationsRepository = locationsRepository;
         _truckRepository = truckRepository;
+        _logger = logger;
     }
 
     public async Task<Trip>  End(string tripId) {
+        _logger.LogInfo($"EndTripUseCase, TripId: {tripId}");
         var trip = await _repository.GetById(tripId);
         
         if (trip.Status != (int) TripStatuses.STARTED) {

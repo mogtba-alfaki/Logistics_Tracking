@@ -7,7 +7,7 @@ namespace Core.Users;
 
 public class UsersService {
     private readonly UsersUseCases _useCases;
-
+ 
     public UsersService(UsersUseCases useCases) {
         _useCases = useCases;
     }

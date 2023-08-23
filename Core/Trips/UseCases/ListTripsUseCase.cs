@@ -6,7 +6,6 @@ namespace Core.Trips.UseCases;
 
 public class ListTripsUseCase {
     private readonly ITripRepository _repository;
-
     public ListTripsUseCase(ITripRepository repository) {
         _repository = repository;
     }

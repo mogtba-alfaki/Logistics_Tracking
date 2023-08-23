@@ -64,7 +64,6 @@ public class TrackingContext: DbContext{
         var connectionString = 
             $"User Id={DB_USER}; Password={DB_PASSWORD};" +
             $" Host={HOST}; Port={PORT};Database={DATABASE}; Pooling=true;";
-        Console.WriteLine(connectionString);
         optionsBuilder.UseNpgsql(connectionString);
     }
 

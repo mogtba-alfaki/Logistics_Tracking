@@ -2,6 +2,7 @@ using Core.Enums;
 using Core.Exceptions;
 using Core.Geofencing;
 using Core.Helpers;
+using Core.Interfaces;
 using Core.Repositories;
 using Core.Trips.Dto;
 using Domain.Entities;
@@ -13,16 +14,18 @@ public class UpdateTripLocationUseCase {
     private readonly ITripRepository _tripRepository;
     private readonly IRestrictedAreaRepository _restrictedAreaRepository; 
     private readonly ISpatialDataServices _spatialDataServices;
+    private readonly ILogger _logger;
 
-
-    public UpdateTripLocationUseCase(ITripLocationRepository tripLocationsRepository, ITripRepository tripRepository, IRestrictedAreaRepository restrictedAreaRepository, ISpatialDataServices spatialDataServices) {
+    public UpdateTripLocationUseCase(ITripLocationRepository tripLocationsRepository, ITripRepository tripRepository, IRestrictedAreaRepository restrictedAreaRepository, ISpatialDataServices spatialDataServices, ILogger logger) {
         _tripLocationsRepository = tripLocationsRepository;
         _tripRepository = tripRepository;
         _restrictedAreaRepository = restrictedAreaRepository;
         _spatialDataServices = spatialDataServices;
+        _logger = logger;
     }
 
     public async Task<bool> Update(TripLocationDto dto) {
+        _logger.LogInfo($"UpdateTripLocationUseCase, Location: {dto}");
         var trip = await _tripRepository.GetById(dto.TripId);        
         
         if (trip.Status != (int) TripStatuses.STARTED) {
