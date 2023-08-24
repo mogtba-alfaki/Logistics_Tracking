@@ -1,3 +1,4 @@
+using Core.Exceptions;
 using Core.Repositories;
 using Domain.Entities;
 using Infrastructure.Database;
@@ -14,7 +15,7 @@ public class ShipmentRepository: BaseRepository<Shipment>, IShipmentRepository {
     public override async Task<Shipment> Update(Shipment shipment) {
         var entry = await _context.Shipments.FindAsync(shipment.Id);
         if (entry is null) {
-            throw new Exception("Not Found");  
+            throw new NotFoundException("Not Found");  
         }
 
         entry.Breakable = shipment.Breakable;

@@ -31,9 +31,6 @@ public class TruckUseCases {
         var S3Id = await _awsS3.UploadImageAsync(imagePath);
         File.Delete(imagePath);
         
-        // TODO refactor dto mappers 
-        // var truck = Truck
-        // Mapper.MapDtoToEntity(truckDto);
         var truck = new Truck {
             Id = IdGenerator.Generate(),
             Color = dto.Color,

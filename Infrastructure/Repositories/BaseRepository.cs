@@ -1,3 +1,4 @@
+using Core.Exceptions;
 using Core.Helpers;
 using Core.Repositories;
 using Domain.Entities;
@@ -31,13 +32,17 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntit
     }
 
     public async Task<T> GetById(string id) {
-       return  await _context.Set<T>().FindAsync(id);
+       var entity =   await _context.Set<T>().FindAsync(id);
+       if (entity is null) {
+           throw new NotFoundException("Not Found");
+       }
+       return entity;
     }
 
     public async Task<bool> Delete(string id) {
         var entity = await _context.Set<T>().FindAsync(id);
         if (entity is null) {
-            throw new Exception("Not Found"); 
+            throw new NotFoundException("Not Found"); 
         } 
         
         _context.Set<T>().Remove(entity);
@@ -48,7 +53,7 @@ public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntit
     public virtual  async Task<T> Update(T entity) {
         var entityFound = await _context.Set<T>().FindAsync(entity.Id);
         if (entityFound is null) {
-            throw new Exception("Not Found"); 
+            throw new NotFoundException("Not Found"); 
         }
 
         var newEntity  = _context.Set<T>().Update(entityFound);
