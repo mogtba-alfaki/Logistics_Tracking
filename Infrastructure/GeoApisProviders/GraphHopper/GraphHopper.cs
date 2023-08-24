@@ -1,7 +1,6 @@
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
-namespace Core.Geofencing; 
+namespace Infrastructure.GeoApisProviders; 
 
 public class GraphHopper {
     private readonly HttpClient client = new HttpClient();

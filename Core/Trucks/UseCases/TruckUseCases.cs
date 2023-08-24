@@ -12,12 +12,10 @@ public class TruckUseCases {
     private readonly ITruckRepository _repository;
     private readonly IObjectStorageProvider _awsS3;
     private readonly TrucksMapper _mapper;
-
-    public TruckUseCases(ITruckRepository repository, IObjectStorageProvider awsS3, TrucksMapper mapper) {
     private readonly ILogger _logger;
     private const string LOGPREFIX = "TruckUseCases"; 
 
-    public TruckUseCases(ITruckRepository repository, IObjectStorageProvider awsS3, ILogger logger) {
+    public TruckUseCases(ITruckRepository repository, IObjectStorageProvider awsS3, ILogger logger, TrucksMapper mapper) {
         _repository = repository;
         _awsS3 = awsS3;
         _logger = logger;

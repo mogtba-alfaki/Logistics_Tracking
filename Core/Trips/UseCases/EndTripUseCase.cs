@@ -5,7 +5,6 @@ using Core.Interfaces;
 using Core.Repositories;
 using Core.RestrictedAreas.Dto;
 using Core.Trips.Dto;
-using Domain.Entities;
 
 namespace Core.Trips.UseCases; 
 
@@ -17,7 +16,7 @@ public class EndTripUseCase {
     private readonly ILogger _logger;
     private readonly TripsMapper _mapper; 
 
-    public EndTripUseCase(SpatialDataUtility mapHelper, ITripRepository repository, ITripLocationRepository locationsRepository, ITruckRepository truckRepository) {
+    public EndTripUseCase(SpatialDataUtility mapHelper, ITripRepository repository, ITripLocationRepository locationsRepository, ITruckRepository truckRepository, ILogger logger) {
         _spatialDataUtility = mapHelper;
         _repository = repository;
         _locationsRepository = locationsRepository;

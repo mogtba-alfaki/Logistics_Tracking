@@ -1,4 +1,4 @@
-namespace Core.Geofencing; 
+namespace Infrastructure.GeoApisProviders; 
 
 public static class MapProviderConstants {
     public static string GraphHopperRoutesApiUrl = Environment.GetEnvironmentVariable("GRAPHHOPPER_URL");

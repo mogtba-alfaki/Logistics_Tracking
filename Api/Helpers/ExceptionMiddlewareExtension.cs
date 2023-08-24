@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Core.Exceptions;
+using Infrastructure.GeoApisProviders;
 using Infrastructure.Helpers.AwsS3;
 using Microsoft.AspNetCore.Diagnostics;
 
@@ -37,6 +38,10 @@ public static class ExceptionMiddlewareExtension {
                         await HandleExceptionAsync(context, "NotFound",
                             exception.Message, StatusCodes.Status404NotFound);
                         break;
+                    case SpatialDataApisException:
+                        await HandleExceptionAsync(context, "SpatialDataApisException",
+                            exception.Message, StatusCodes.Status400BadRequest);
+                        break;
                     default:
                         var e = new Exception("Internal Server Error");
                         await HandleExceptionAsync(context,
@@ -56,6 +61,7 @@ public static class ExceptionMiddlewareExtension {
             detail = message,
             traceId = Guid.NewGuid().ToString()
         };
+        context.Response.StatusCode = statusCode; 
         await context.Response.WriteAsync(JsonSerializer.Serialize(response));
     }
 }

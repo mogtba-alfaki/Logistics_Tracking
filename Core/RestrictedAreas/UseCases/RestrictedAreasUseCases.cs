@@ -1,6 +1,7 @@
 using System.Text.Json;
 using Core.Enums;
 using Core.Exceptions;
+using Core.Geofencing;
 using Core.Helpers;
 using Core.Interfaces;
 using Core.Repositories;
@@ -14,13 +15,15 @@ public class RestrictedAreasUseCases {
     private readonly ITripRepository _tripRepository;
     private readonly RestrictedAreaMapper _mapper;
     private readonly ILogger _logger;
-    private const string LOGPREFIX = "RestrictedAreaUseCases"; 
+    private readonly ISpatialDataServices _spatialDataServices; 
+    private const string LOGPREFIX = "RestrictedAreaUseCases";
 
-    public RestrictedAreasUseCases(IRestrictedAreaRepository repository, ITripRepository tripRepository, ILogger logger, RestrictedAreaMapper mapper) {
+    public RestrictedAreasUseCases(IRestrictedAreaRepository repository, ITripRepository tripRepository, RestrictedAreaMapper mapper, ILogger logger, ISpatialDataServices spatialDataServices) {
         _repository = repository;
         _tripRepository = tripRepository;
-        _logger = logger;
         _mapper = mapper;
+        _logger = logger;
+        _spatialDataServices = spatialDataServices;
     }
 
     public async Task<List<GetRestrictedAreaDto>> ListRestrictedAreas(CustomQueryParameters queryParameters) {
@@ -35,6 +38,15 @@ public class RestrictedAreasUseCases {
         
         if (trip.Status == (int) TripStatuses.ENDED) {
             throw new UnCorrectTripStatusException("Trip is ended"); 
+        }
+
+        var areaPolygon = JsonSerializer.Serialize(restrictedAreaDto.AreaPolygon); 
+
+        var isValidPolygon = await _spatialDataServices
+            .IsValidGeometryPolygon(areaPolygon);
+        
+        if (!isValidPolygon) {
+            throw new SpatialDataApisException("Not Valid Area Polygon"); 
         }
         
         var area = new RestrictedArea {
