@@ -11,6 +11,7 @@ public class ListTripsUseCase {
     private readonly TripsMapper _mapper;
 
     public ListTripsUseCase(ITripRepository repository, TripsMapper mapper) {
+    public ListTripsUseCase(ITripRepository repository) {
         _repository = repository;
         _mapper = mapper;
     }

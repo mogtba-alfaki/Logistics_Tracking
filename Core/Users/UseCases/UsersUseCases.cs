@@ -4,6 +4,7 @@ using System.Text;
 using Core.Enums;
 using Core.Exceptions;
 using Core.Helpers;
+using Core.Interfaces;
 using Core.Repositories;
 using Core.RestrictedAreas.Dto;
 using Core.Users.UseCases.Dto;
@@ -14,19 +15,26 @@ namespace Core.Users.UseCases;
 
 public class UsersUseCases {
     private readonly IUserRepository _userRepository;
+    private readonly ILogger _logger;
+    private const string LOGPREFIX = "UsersUseCase";  
     private readonly UsersMapper _mapper; 
-    public UsersUseCases(IUserRepository userRepository, UsersMapper mapper) {
+
+    public UsersUseCases(IUserRepository userRepository, ILogger logger, UsersMapper mapper) {
         _userRepository = userRepository;
-        _mapper = mapper; 
+        _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<List<UserDto>> ListUsers(CustomQueryParameters customQueryParameters) {
+        _logger.LogInfo($"{LOGPREFIX}, ListUsers, query: {customQueryParameters}");
         var users =  await _userRepository.List(customQueryParameters);
         return _mapper.MapList(users); 
     }
 
         public async Task<UserDto> Signup(SignInDto dto) {
-        var hashedPassword = await HashHelper.ComputeHash(dto.Password); 
+        _logger.LogInfo($"{LOGPREFIX}, Signup, dto: {dto}");
+        var hashedPassword = await HashHelper.ComputeHash(dto.Password);
+        
         var user = new User {
             Id = IdGenerator.Generate(),
             Username = dto.Username,
@@ -42,11 +50,13 @@ public class UsersUseCases {
     }
 
     public async Task<string> Login(UserLoginDto dto) {
+        _logger.LogInfo($"{LOGPREFIX}, Login, LoginDto: {dto}");
         var username = dto.Username;
         var password = dto.Password; 
         var userExist = await _userRepository.GetByUsername(username);
         var hashedPassword = await HashHelper.ComputeHash(password);
         if (userExist.Password.Trim() != hashedPassword.Trim()) {
+            _logger.LogWarn($"{LOGPREFIX}, Login, Wrong Password, LoginDto: {dto}");
             throw new InvalidLoginCredentials("username or password is incorrect"); 
         }
 

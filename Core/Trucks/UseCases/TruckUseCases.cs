@@ -14,17 +14,24 @@ public class TruckUseCases {
     private readonly TrucksMapper _mapper;
 
     public TruckUseCases(ITruckRepository repository, IObjectStorageProvider awsS3, TrucksMapper mapper) {
+    private readonly ILogger _logger;
+    private const string LOGPREFIX = "TruckUseCases"; 
+
+    public TruckUseCases(ITruckRepository repository, IObjectStorageProvider awsS3, ILogger logger) {
         _repository = repository;
         _awsS3 = awsS3;
+        _logger = logger;
         _mapper = mapper;
     }
 
     public async Task<List<TruckDto>> ListTrucks(CustomQueryParameters queryParameters) {
+        _logger.LogInfo($"{LOGPREFIX}, ListTrucks, query: {queryParameters}");
         var trucks = await _repository.List(queryParameters);
         return _mapper.MapList(trucks); 
     }
 
     public async Task<TruckDto> AddTruck(TruckDto dto) {
+        _logger.LogInfo($"{LOGPREFIX}, AddTruck, truckDto: {dto}");
         IFormFile truckImage = dto.TruckImage;
         var imagePath = await MultiPartFileHandler.UploadAsync(truckImage);
         var S3Id = await _awsS3.UploadImageAsync(imagePath);
@@ -49,6 +56,7 @@ public class TruckUseCases {
     }
 
     public async Task<TruckDto> GetTruckProfile(string id) {
+        _logger.LogInfo($"{LOGPREFIX}, GetTruckProfile, TruckId: {id}");
         var truck = await _repository.GetById(id);
         var truckImage = await _awsS3.GetImageAsync(truck.ImageStorageId);
         return new TruckDto {
@@ -64,6 +72,7 @@ public class TruckUseCases {
     }
     
     public async Task<bool> DeleteTruck(string id) {
+        _logger.LogInfo($"{LOGPREFIX}, DeleteTruck, TruckId: {id}");
         return await _repository.Delete(id); 
     }
 }

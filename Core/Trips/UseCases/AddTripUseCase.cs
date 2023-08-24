@@ -1,6 +1,7 @@
 using Core.Enums;
 using Core.Exceptions;
 using Core.Helpers;
+using Core.Interfaces;
 using Core.Repositories;
 using Core.RestrictedAreas.Dto;
 using Core.Trips.Dto;
@@ -13,15 +14,18 @@ public class AddTripUseCase {
     private readonly IShipmentRepository _shipmentRepository;
     private readonly ITruckRepository _truckRepository;
     private readonly TripsMapper _mapper;
+    private readonly ILogger _logger;
 
-    public AddTripUseCase(ITripRepository tripRepository, IShipmentRepository shipmentRepository, ITruckRepository truckRepository, TripsMapper mapper) {
+    public AddTripUseCase(ITripRepository tripRepository, IShipmentRepository shipmentRepository, ITruckRepository truckRepository, ILogger logger, TripsMapper mapper) {
         _tripRepository = tripRepository;
         _shipmentRepository = shipmentRepository;
         _truckRepository = truckRepository;
         _mapper = mapper;
+        _logger = logger;
     }
 
     public async Task<GetTripDto> AddTrip(AddTripDto dto) {
+        _logger.LogInfo($"AddTripUseCase, Trip: {dto}");
         var truck = await _truckRepository.GetById(dto.TruckId);
         if (truck == null ||  truck.Status == (int) TruckStatuses.ON_TRIP) {
             throw new UnCorrectTruckStatusException("Truck is Already on Trip"); 
