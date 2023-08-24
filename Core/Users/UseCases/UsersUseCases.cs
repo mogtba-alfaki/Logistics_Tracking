@@ -4,6 +4,7 @@ using System.Text;
 using Core.Enums;
 using Core.Exceptions;
 using Core.Helpers;
+using Core.Interfaces;
 using Core.Repositories;
 using Core.Users.UseCases.Dto;
 using Domain.Entities;
@@ -13,16 +14,21 @@ namespace Core.Users.UseCases;
 
 public class UsersUseCases {
     private readonly IUserRepository _userRepository;
+    private readonly ILogger _logger;
+    private const string LOGPREFIX = "UsersUseCase";  
 
-    public UsersUseCases(IUserRepository userRepository) {
+    public UsersUseCases(IUserRepository userRepository, ILogger logger) {
         _userRepository = userRepository;
+        _logger = logger;
     }
 
     public async Task<List<User>> ListUsers(CustomQueryParameters customQueryParameters) {
+        _logger.LogInfo($"{LOGPREFIX}, ListUsers, query: {customQueryParameters}");
         return await _userRepository.List(customQueryParameters); 
     }
 
     public async Task<User> Signup(SignInDto dto) {
+        _logger.LogInfo($"{LOGPREFIX}, Signup, dto: {dto}");
         
         var hashedPassword = await HashHelper.ComputeHash(dto.Password); 
         
@@ -40,11 +46,13 @@ public class UsersUseCases {
     }
 
     public async Task<string> Login(UserLoginDto dto) {
+        _logger.LogInfo($"{LOGPREFIX}, Login, LoginDto: {dto}");
         var username = dto.Username;
         var password = dto.Password; 
         var userExist = await _userRepository.GetByUsername(username);
         var hashedPassword = await HashHelper.ComputeHash(password);
         if (userExist.Password.Trim() != hashedPassword.Trim()) {
+            _logger.LogWarn($"{LOGPREFIX}, Login, Wrong Password, LoginDto: {dto}");
             throw new InvalidLoginCredentials("username or password is incorrect"); 
         }
 

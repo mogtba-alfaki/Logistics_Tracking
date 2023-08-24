@@ -17,7 +17,6 @@ builder.Services.ConfigureJwtAuthentication();
 
 var app = builder.Build();
 
-
 app.UseAuthentication();
 app.UseAuthorization();
 
