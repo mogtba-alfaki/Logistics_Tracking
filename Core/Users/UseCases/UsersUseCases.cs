@@ -25,8 +25,8 @@ public class UsersUseCases {
         return _mapper.MapList(users); 
     }
 
-    public async Task<UserDto> Signup(SignInDto dto) {
-        var hashedPassword = HashHelper.ComputeHash(dto.Password); 
+        public async Task<UserDto> Signup(SignInDto dto) {
+        var hashedPassword = await HashHelper.ComputeHash(dto.Password); 
         var user = new User {
             Id = IdGenerator.Generate(),
             Username = dto.Username,
@@ -45,7 +45,7 @@ public class UsersUseCases {
         var username = dto.Username;
         var password = dto.Password; 
         var userExist = await _userRepository.GetByUsername(username);
-        var hashedPassword = HashHelper.ComputeHash(password);
+        var hashedPassword = await HashHelper.ComputeHash(password);
         if (userExist.Password.Trim() != hashedPassword.Trim()) {
             throw new InvalidLoginCredentials("username or password is incorrect"); 
         }

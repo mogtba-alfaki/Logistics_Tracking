@@ -1,3 +1,4 @@
+using Core.Exceptions;
 using Core.Repositories;
 using Domain.Entities;
 using Infrastructure.Database;
@@ -14,7 +15,7 @@ public class TruckRepository: BaseRepository<Truck>, ITruckRepository {
     public async Task<bool> ChangeTruckStatus(string id, int newStatus) {
         var truck = await _context.Trucks.FindAsync(id);
         if (truck is null) {
-            throw new Exception("Not Found"); 
+            throw new NotFoundException("Not Found"); 
         }
 
         truck.Status = newStatus;
@@ -25,7 +26,7 @@ public class TruckRepository: BaseRepository<Truck>, ITruckRepository {
     public override async Task<Truck> Update(Truck truck) {
         var entry = await _context.Trucks.FindAsync(truck.Id);
         if (entry is null) {
-            throw new Exception("Not Found"); 
+            throw new NotFoundException("Not Found"); 
         }
 
         entry.Color = truck.Color;

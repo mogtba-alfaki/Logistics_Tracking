@@ -1,4 +1,4 @@
-using Core.Helpers;
+using Core.Exceptions;
 using Core.Repositories;
 using Domain.Entities;
 using Infrastructure.Database;
@@ -17,7 +17,7 @@ public class UserRepository: BaseRepository<User>, IUserRepository {
         var result = await _context.Users
             .FirstOrDefaultAsync(user => user.Username == username);
         if (result is null) {
-            throw new Exception("Not Found"); 
+            throw new NotFoundException("Not Found"); 
         }
         return result;
     }
@@ -25,7 +25,7 @@ public class UserRepository: BaseRepository<User>, IUserRepository {
     public override async Task<User> Update(User user) {
         var userFound = await _context.Users.FindAsync(user.Id);
         if (userFound is null) {
-            throw new Exception("Not Found"); 
+            throw new NotFoundException("Not Found"); 
         }
 
         userFound.Password = user.Password;
