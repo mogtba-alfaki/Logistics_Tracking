@@ -9,6 +9,8 @@ using Core.Trucks;
 using Core.Trucks.UseCases;
 using Core.Users;
 using Core.Users.UseCases;
+using Domain.Entities;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core; 
@@ -35,7 +37,10 @@ public static class CoreLayerServicesExtension {
         services.AddScoped<RestrictedAreaMapper, RestrictedAreaMapper>();
         services.AddScoped<TripsMapper, TripsMapper>();
         services.AddScoped<TrucksMapper, TrucksMapper>();
-        services.AddScoped<UsersMapper, UsersMapper>(); 
+        services.AddScoped<UsersMapper, UsersMapper>();
+
+        services.AddScoped<IValidator<User>, UsersValidations>();
+        services.AddScoped<IValidator<Trip>, TripValidations>();
         
         return services;
     }
