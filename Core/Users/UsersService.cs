@@ -12,11 +12,11 @@ public class UsersService {
         _useCases = useCases;
     }
 
-    public async Task<List<User>> ListUsers(CustomQueryParameters customQueryParameters) {
+    public async Task<List<UserDto>> ListUsers(CustomQueryParameters customQueryParameters) {
         return await _useCases.ListUsers(customQueryParameters); 
     }
 
-    public async Task<User> Signup(SignInDto dto) {
+    public async Task<UserDto> Signup(SignInDto dto) {
         return await _useCases.Signup(dto); 
     }
     

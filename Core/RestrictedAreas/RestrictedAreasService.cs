@@ -1,3 +1,4 @@
+using AutoMapper;
 using Core.Helpers;
 using Core.RestrictedAreas.Dto;
 using Core.RestrictedAreas.UseCases;
@@ -7,16 +8,15 @@ namespace Core.RestrictedAreas;
 
 public class RestrictedAreasService {
     private readonly RestrictedAreasUseCases _useCases;
-
     public RestrictedAreasService(RestrictedAreasUseCases useCases) {
         _useCases = useCases;
     } 
     
-    public async Task<List<RestrictedArea>> ListRestrictedAreas(CustomQueryParameters queryParameters) {
+    public async Task<List<GetRestrictedAreaDto>> ListRestrictedAreas(CustomQueryParameters queryParameters) {
         return await _useCases.ListRestrictedAreas(queryParameters); 
     } 
     
-    public async Task<RestrictedArea> AddRestrictedArea(AddRestrictedArea addRestrictedAreaDto) {
+    public async Task<GetRestrictedAreaDto> AddRestrictedArea(AddRestrictedArea addRestrictedAreaDto) {
         return await _useCases.AddRestrictedArea(addRestrictedAreaDto); 
     }
 

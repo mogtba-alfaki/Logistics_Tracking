@@ -1,5 +1,7 @@
+using AutoMapper;
 using Core.Geofencing;
 using Core.RestrictedAreas;
+using Core.RestrictedAreas.Dto;
 using Core.RestrictedAreas.UseCases;
 using Core.Trips;
 using Core.Trips.UseCases;
@@ -23,11 +25,17 @@ public static class CoreLayerServicesExtension {
         services.AddScoped<ListTripsUseCase, ListTripsUseCase>();
         services.AddScoped<EndTripUseCase, EndTripUseCase>(); 
         services.AddScoped<UpdateTripLocationUseCase, UpdateTripLocationUseCase>();
-        services.AddScoped<UsersUseCases, UsersUseCases>();
-        services.AddScoped<UsersService, UsersService>(); 
-
         services.AddScoped<TripService, TripService>();
-        services.AddScoped<MapsUtil, MapsUtil>(); 
+        
+        services.AddScoped<UsersUseCases, UsersUseCases>();
+        services.AddScoped<UsersService, UsersService>();
+        
+        services.AddScoped<SpatialDataUtility, SpatialDataUtility>();
+
+        services.AddScoped<RestrictedAreaMapper, RestrictedAreaMapper>();
+        services.AddScoped<TripsMapper, TripsMapper>();
+        services.AddScoped<TrucksMapper, TrucksMapper>();
+        services.AddScoped<UsersMapper, UsersMapper>(); 
         
         return services;
     }

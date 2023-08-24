@@ -20,7 +20,7 @@ public class ShipmentService {
         return await _useCases.GetShipmentById(id); 
     }
 
-    public async Task<Shipment> AddShipment(AddShipmentDto shipment) {
+    public async Task<Shipment> AddShipment(ShipmentDto shipment) {
         
         return await _useCases.AddShipment(shipment); 
     } 

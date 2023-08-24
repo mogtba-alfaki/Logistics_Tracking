@@ -1,6 +1,6 @@
 namespace Core.Trips.Dto; 
 
-public class AddShipmentDto {
+public class ShipmentDto {
     public decimal Weight { get; set; }  
     public double? StorageTemperature { get; set; }
     public bool Breakable { get; set; } = false; 
@@ -11,7 +11,7 @@ public class AddShipmentDto {
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
-    public AddShipmentDto(decimal weight, double? storageTemperature, bool breakable, int type, int quantity, int quantityMeasure) {
+    public ShipmentDto(decimal weight, double? storageTemperature, bool breakable, int type, int quantity, int quantityMeasure) {
         Weight = weight;
         StorageTemperature = storageTemperature;
         Breakable = breakable;
@@ -20,6 +20,6 @@ public class AddShipmentDto {
         QuantityMeasure = quantityMeasure;
     }
 
-    public AddShipmentDto() {
+    public ShipmentDto() {
     }
 }

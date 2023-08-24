@@ -3,6 +3,7 @@ using Core.Exceptions;
 using Core.Helpers;
 using Core.Interfaces;
 using Core.Repositories;
+using Core.RestrictedAreas.Dto;
 using Core.Trips.Dto;
 using Domain.Entities;
 
@@ -12,16 +13,18 @@ public class AddTripUseCase {
     private readonly ITripRepository _tripRepository;
     private readonly IShipmentRepository _shipmentRepository;
     private readonly ITruckRepository _truckRepository;
+    private readonly TripsMapper _mapper;
     private readonly ILogger _logger;
 
-    public AddTripUseCase(ITripRepository tripRepository, IShipmentRepository shipmentRepository, ITruckRepository truckRepository, ILogger logger) {
+    public AddTripUseCase(ITripRepository tripRepository, IShipmentRepository shipmentRepository, ITruckRepository truckRepository, ILogger logger, TripsMapper mapper) {
         _tripRepository = tripRepository;
         _shipmentRepository = shipmentRepository;
         _truckRepository = truckRepository;
+        _mapper = mapper;
         _logger = logger;
     }
 
-    public async Task<Trip> AddTrip(AddTripDto dto) {
+    public async Task<GetTripDto> AddTrip(AddTripDto dto) {
         _logger.LogInfo($"AddTripUseCase, Trip: {dto}");
         var truck = await _truckRepository.GetById(dto.TruckId);
         if (truck == null ||  truck.Status == (int) TruckStatuses.ON_TRIP) {
@@ -54,6 +57,6 @@ public class AddTripUseCase {
         
         var result = await _tripRepository.Create(trip);
         await _truckRepository.ChangeTruckStatus(truck.Id,(int) TruckStatuses.ON_TRIP);
-        return result;
+        return _mapper.MapToDto(trip);
     }
 }

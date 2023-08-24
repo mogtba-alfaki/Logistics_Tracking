@@ -6,6 +6,7 @@ using Core.Exceptions;
 using Core.Helpers;
 using Core.Interfaces;
 using Core.Repositories;
+using Core.RestrictedAreas.Dto;
 using Core.Users.UseCases.Dto;
 using Domain.Entities;
 using Microsoft.IdentityModel.Tokens;
@@ -16,21 +17,23 @@ public class UsersUseCases {
     private readonly IUserRepository _userRepository;
     private readonly ILogger _logger;
     private const string LOGPREFIX = "UsersUseCase";  
+    private readonly UsersMapper _mapper; 
 
-    public UsersUseCases(IUserRepository userRepository, ILogger logger) {
+    public UsersUseCases(IUserRepository userRepository, ILogger logger, UsersMapper mapper) {
         _userRepository = userRepository;
+        _mapper = mapper;
         _logger = logger;
     }
 
-    public async Task<List<User>> ListUsers(CustomQueryParameters customQueryParameters) {
+    public async Task<List<UserDto>> ListUsers(CustomQueryParameters customQueryParameters) {
         _logger.LogInfo($"{LOGPREFIX}, ListUsers, query: {customQueryParameters}");
-        return await _userRepository.List(customQueryParameters); 
+        var users =  await _userRepository.List(customQueryParameters);
+        return _mapper.MapList(users); 
     }
 
-    public async Task<User> Signup(SignInDto dto) {
+        public async Task<UserDto> Signup(SignInDto dto) {
         _logger.LogInfo($"{LOGPREFIX}, Signup, dto: {dto}");
-        
-        var hashedPassword = await HashHelper.ComputeHash(dto.Password); 
+        var hashedPassword = await HashHelper.ComputeHash(dto.Password);
         
         var user = new User {
             Id = IdGenerator.Generate(),
@@ -42,7 +45,8 @@ public class UsersUseCases {
             Token = null,
         };  
         
-        return await _userRepository.Create(user); 
+        var createdUser = await _userRepository.Create(user);
+        return _mapper.MapEntityToDto(createdUser); 
     }
 
     public async Task<string> Login(UserLoginDto dto) {
@@ -60,6 +64,7 @@ public class UsersUseCases {
         return token; 
     }
 
+    // TODO extract this method to a jwt helper class 
     private string GenerateJwtToken(User user) {
         var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY");
         var issuer = Environment.GetEnvironmentVariable("JWT_ISSUER");
