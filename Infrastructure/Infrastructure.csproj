@@ -4,6 +4,7 @@
         <TargetFramework>net7.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,12 +25,17 @@
       <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.1.0-preview" />
       <PackageReference Include="NetTopologySuite" Version="2.5.0" />
       <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="7.0.0" />
+      <PackageReference Include="RabbitMQ.Client" Version="6.5.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Domain\Domain.csproj" />
         <ProjectReference Include="..\Core\Core.csproj" />
         
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="bin\Debug\net7.0\.env" />
     </ItemGroup>
 
 </Project>
