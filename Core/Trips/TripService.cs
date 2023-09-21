@@ -1,20 +1,22 @@
+using System.Text.Json;
 using Core.Helpers;
+using Core.Interfaces.MessageQueue;
 using Core.Trips.Dto;
 using Core.Trips.UseCases;
-using Domain.Entities;
 
 namespace Core.Trips; 
 
 public class TripService {
     private readonly AddTripUseCase AddTripUseCase;
     private readonly ListTripsUseCase ListTripsUseCase;
-    private readonly UpdateTripLocationUseCase UpdateTripLocationUseCase;
     private readonly EndTripUseCase EndTripUseCase;
-    public TripService(AddTripUseCase addTripUseCase, ListTripsUseCase listTripsUseCase, UpdateTripLocationUseCase updateTripLocationUseCase, EndTripUseCase endTripUseCase) {
+    private readonly IPublisher _publisher;
+
+    public TripService(AddTripUseCase addTripUseCase, ListTripsUseCase listTripsUseCase, EndTripUseCase endTripUseCase, IPublisher publisher) {
         AddTripUseCase = addTripUseCase;
         ListTripsUseCase = listTripsUseCase;
-        UpdateTripLocationUseCase = updateTripLocationUseCase;
         EndTripUseCase = endTripUseCase;
+        _publisher = publisher;
     }
 
     public async Task<List<GetTripDto>> ListTrips(CustomQueryParameters customQueryParameters) {
@@ -25,7 +27,9 @@ public class TripService {
     }
 
     public async Task<bool> UpdateTripLocation(TripLocationDto dto) {
-        return await UpdateTripLocationUseCase.Update(dto); 
+        var messageString = JsonSerializer.Serialize(dto);
+        await _publisher.PublishMessage(messageString);
+        return true; 
     }
     
     public async Task<GetTripDto> EndTrip(string tripId) {

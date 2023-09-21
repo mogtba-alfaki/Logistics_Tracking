@@ -24,8 +24,8 @@ public static class InfrastructureLayerServiceExtension {
         
         services.AddScoped<ISpatialDataServices, SpatialDataServices>();
         services.AddScoped<IObjectStorageProvider, AwsS3Helper>();
-        services.AddScoped<ILogger, Logger>(); 
-        
+        services.AddScoped<ILogger, Logger>();
+
         return services;
     }
 

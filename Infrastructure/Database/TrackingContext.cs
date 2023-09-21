@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Domain.Entities;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Database; 
 
@@ -64,7 +65,7 @@ public class TrackingContext: DbContext{
         var connectionString = 
             $"User Id={DB_USER}; Password={DB_PASSWORD};" +
             $" Host={HOST}; Port={PORT};Database={DATABASE}; Pooling=true;";
-        optionsBuilder.UseNpgsql(connectionString);
+        optionsBuilder.UseNpgsql(connectionString).LogTo(Console.WriteLine, LogLevel.Information); 
     }
 
     public DbSet<Truck> Trucks { get; set; }
