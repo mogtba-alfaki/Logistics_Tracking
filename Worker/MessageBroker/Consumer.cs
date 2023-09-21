@@ -2,7 +2,7 @@ using System.Text;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace Infrastructure.MessageBroker; 
+namespace Worker.MessageBroker; 
 
 public class Consumer {
     private RabbitMqConnection _connection; 

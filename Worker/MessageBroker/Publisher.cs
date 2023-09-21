@@ -1,10 +1,7 @@
 using System.Text;
-using Core.Interfaces;
 using Core.Interfaces.MessageQueue;
-using Microsoft.Extensions.Hosting;
-using RabbitMQ.Client;
 
-namespace Infrastructure.MessageBroker; 
+namespace Worker.MessageBroker;
 
 public class Publisher : IPublisher {
      private string ExchangeName = Environment.GetEnvironmentVariable("MAIN_EXCHANGE_NAME");

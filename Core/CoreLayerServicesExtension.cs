@@ -1,5 +1,6 @@
 using AutoMapper;
 using Core.Geofencing;
+using Core.Interfaces.MessageQueue;
 using Core.RestrictedAreas;
 using Core.RestrictedAreas.Dto;
 using Core.RestrictedAreas.UseCases;
@@ -40,8 +41,7 @@ public static class CoreLayerServicesExtension {
         services.AddScoped<UsersMapper, UsersMapper>();
 
         services.AddScoped<IValidator<User>, UsersValidations>();
-        services.AddScoped<IValidator<Trip>, TripValidations>();
-        
+        services.AddScoped<IValidator<Trip>, TripValidations>();        
         return services;
     }
 }

@@ -1,25 +1,27 @@
 using System.Text.Json;
-using Core.Helpers;
 using Core.Trips.Dto;
-using Core.Trips.UseCases;
 using Domain.Entities;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Infrastructure.Database;
+using Worker.MessageBroker;
 using RabbitMQ.Client;
-namespace Infrastructure.MessageBroker; 
+using Worker.Services;
 
-public class Worker {
+namespace Worker; 
+
+public class RabbitMqWorker {
     private readonly Consumer _consumer;  
     private  readonly  string QueueName =  Environment.GetEnvironmentVariable("MAIN_QUEUE_NAME");
     private  readonly  string ExchangeName =  Environment.GetEnvironmentVariable("MAIN_EXCHANGE_NAME");
     private readonly RabbitMqConnection _connection;
     private readonly IModel _channel;
-
-    public Worker() {
+    private readonly TrackingContext _context;
+    private readonly LocationServices _locationServices;
+    public RabbitMqWorker(TrackingContext context, LocationServices locationServices) {
         _connection =  new RabbitMqConnection(); 
         _channel = _connection.GetChannel();
         _consumer = new Consumer();
+        _context = context;
+        _locationServices = locationServices;
     }
 
     public void Run() {
@@ -31,9 +33,8 @@ public class Worker {
         _consumer.Subscribe(_connection, QueueName, ProcessLocation);
         Thread.Sleep(Timeout.Infinite);
     }
-
-    private async Task ProcessLocation(string LocationMessage) {
-        var dto = JsonSerializer.Deserialize<TripLocationDto>(LocationMessage);
-        // process 
+    private async Task ProcessLocation(string locationMessage) {
+        var dto = JsonSerializer.Deserialize<TripLocationDto>(locationMessage);
+        await _locationServices.UpdateLocation(dto);
     }   
 }

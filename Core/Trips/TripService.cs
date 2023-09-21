@@ -1,6 +1,5 @@
 using System.Text.Json;
 using Core.Helpers;
-using Core.Interfaces;
 using Core.Interfaces.MessageQueue;
 using Core.Trips.Dto;
 using Core.Trips.UseCases;
@@ -10,14 +9,12 @@ namespace Core.Trips;
 public class TripService {
     private readonly AddTripUseCase AddTripUseCase;
     private readonly ListTripsUseCase ListTripsUseCase;
-    private readonly UpdateTripLocationUseCase UpdateTripLocationUseCase;
     private readonly EndTripUseCase EndTripUseCase;
     private readonly IPublisher _publisher;
 
-    public TripService(AddTripUseCase addTripUseCase, ListTripsUseCase listTripsUseCase, UpdateTripLocationUseCase updateTripLocationUseCase, EndTripUseCase endTripUseCase, IPublisher publisher) {
+    public TripService(AddTripUseCase addTripUseCase, ListTripsUseCase listTripsUseCase, EndTripUseCase endTripUseCase, IPublisher publisher) {
         AddTripUseCase = addTripUseCase;
         ListTripsUseCase = listTripsUseCase;
-        UpdateTripLocationUseCase = updateTripLocationUseCase;
         EndTripUseCase = endTripUseCase;
         _publisher = publisher;
     }
@@ -33,7 +30,6 @@ public class TripService {
         var messageString = JsonSerializer.Serialize(dto);
         await _publisher.PublishMessage(messageString);
         return true; 
-        // return await UpdateTripLocationUseCase.Update(dto); 
     }
     
     public async Task<GetTripDto> EndTrip(string tripId) {

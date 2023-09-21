@@ -1,7 +1,6 @@
-using Core.Interfaces.MessageQueue;
 using RabbitMQ.Client;
 
-namespace Infrastructure.MessageBroker; 
+namespace Worker.MessageBroker;
 
 public class RabbitMqConnection {
     private string Host = Environment.GetEnvironmentVariable("RABBITMQ_HOST"); 

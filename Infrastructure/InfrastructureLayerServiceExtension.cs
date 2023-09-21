@@ -5,7 +5,6 @@ using Core.Repositories;
 using Infrastructure.Database;
 using Infrastructure.GeoApisProviders;
 using Infrastructure.Helpers.AwsS3;
-using Infrastructure.MessageBroker;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,8 +26,6 @@ public static class InfrastructureLayerServiceExtension {
         services.AddScoped<IObjectStorageProvider, AwsS3Helper>();
         services.AddScoped<ILogger, Logger>();
 
-        services.AddScoped<RabbitMqConnection, RabbitMqConnection>();
-        services.AddScoped<IPublisher, Publisher>(); 
         return services;
     }
 
