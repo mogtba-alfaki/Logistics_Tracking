@@ -1,3 +1,4 @@
+using Core.Interfaces.MessageQueue;
 using RabbitMQ.Client;
 
 namespace Infrastructure.MessageBroker; 
@@ -7,17 +8,18 @@ public class RabbitMqConnection {
     public int Port = Convert.ToInt32(Environment.GetEnvironmentVariable("RABBITMQ_PORT")); 
     private string Password =   Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD"); 
     private  string QueueName =  Environment.GetEnvironmentVariable("MAIN_QUEUE_NAME");
-    private ConnectionFactory _factory; 
-    public IModel GetChannel () {
+    private ConnectionFactory _factory;
+    private IConnection _connection;
+    private readonly IModel _channel; 
+    public RabbitMqConnection() {
         _factory = new ConnectionFactory {
             Uri = new Uri($"amqp://guest:guest@{Host}:{Port}/"),
-            Password = Password,
-        }; 
-        
-        var connection = _factory.CreateConnection();
-        IModel channel;
-        channel = connection.CreateModel();
-            channel.QueueDeclare(QueueName); 
-        return channel;
+        };
+        _connection = _factory.CreateConnection();
+        _channel = _connection.CreateModel(); 
     }
+
+    public IModel GetChannel () {
+        return _channel;
+    }    
 }

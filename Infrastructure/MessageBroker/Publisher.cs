@@ -1,21 +1,18 @@
 using System.Text;
+using Core.Interfaces;
+using Core.Interfaces.MessageQueue;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 
 namespace Infrastructure.MessageBroker; 
 
-public class Publisher {
-     RabbitMqConnection _connection = new RabbitMqConnection();
-     private readonly IModel _channel; 
+public class Publisher : IPublisher {
      private string ExchangeName = Environment.GetEnvironmentVariable("MAIN_EXCHANGE_NAME");
-
-     public Publisher() {
-         _channel = _connection.GetChannel(); 
-     }
-
-     public  void PublishMessage(string message) {
-            byte[] bytes = Encoding.UTF8.GetBytes(message); 
-            _channel
-                .BasicPublish(ExchangeName, "", false, null,bytes);
+     private RabbitMqConnection connection = new();  
+     public  async Task PublishMessage(string message) {
+         var channel = connection.GetChannel(); 
+            byte[] bytes = Encoding.UTF8.GetBytes(message);
+                channel.BasicPublish(ExchangeName,
+                    "", false, null,bytes);
     }
 }
